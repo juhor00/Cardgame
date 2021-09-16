@@ -1,5 +1,0 @@
-Version 0.1
-
-Server - client communication works
-Data structure for JSON packages is decided and partially tested
-Basic GUI has been created for the game

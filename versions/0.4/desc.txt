@@ -1,5 +1,0 @@
-Version 0.4
-
-GUI interactions working smoothly
-Hovering over cards makes an animation on opened cards and on interactive card piles
-Widget binding is working correctly
