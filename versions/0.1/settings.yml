@@ -1,0 +1,19 @@
+# Valepaska settings
+
+# Networking
+host: 192.168.1.132
+port: 12345
+
+# Card
+card_width: 30
+card_height: 100
+
+# Screen
+card_frame_height: 200
+screen_width: 1280
+screen_height: 720
+sidebar_width: 150
+card_pad: 30
+backgroundcolor: #35654d
+sidebar_bg: grey
+card_frame_bg: blue

@@ -1,0 +1,5 @@
+Pelin GUI:
+	omat kortit, pakka, pelipöytä, viholliset
+Puuttuu:
+	kusetettujen korttien lukumäärä ja rank
+Lobby on kysymysmerkki

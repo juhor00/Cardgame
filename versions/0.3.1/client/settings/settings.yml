@@ -1,0 +1,53 @@
+# Valepaska settings
+
+# Screen
+# ------
+card_frame_height: 250
+screen_width: 1280
+screen_height: 720
+sidebar_width: 150
+
+# General things
+# --------------
+green: #35654d
+grey: grey
+font: 12
+
+# Hand cards
+# ---------
+# From each others
+card_padx: 40
+# From top of card frame, at least as much as elevate in card_settings.yml
+card_pady: 50
+
+# Card pile
+# ---------
+#How much cards are apart from each others
+cardpile_offset: 8
+
+# Paddings
+cardpile_amount_padx: 60
+cardpile_amount_pady: 0
+cardpile_name_padx: 40
+cardpile_name_pady: 0
+
+# Game
+# ----
+
+#Game frame
+game_frame_pady: 260
+game_frame_name_height: 40
+
+# Relation to game frame
+deck_pady: 0
+deck_padx: 80
+gamepile_pady: 0
+gamepile_padx: 500
+
+# Opponents
+# ---------
+# Opponents frame, should fit card and name
+opponent_height: 230
+opponent_offset: 100
+opponent_padx: 100
+opponent_pady: 10

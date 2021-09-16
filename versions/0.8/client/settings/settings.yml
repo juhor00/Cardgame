@@ -1,0 +1,66 @@
+# Valepaska settings
+
+
+# GENERAL
+  # Screen
+  screen_width: 1280
+  screen_height: 720
+  sidebar_width: 150
+
+  green: #35654d
+  grey: grey
+  font: 12
+
+  # Names
+  deck_name: Deck
+  game_name: Game
+
+
+# FRAMES
+  # Main frames
+  game_frame_pady: 230
+  row_height: 250
+
+  # Hand
+    # From each others
+    card_padx: 40
+    card_pady: 50
+    max_hand_cards: 10
+    arrow_width: 40
+    arrow_height: 40
+    arrow_pad: 20
+    hand_background_width: 200
+
+  # Card pile
+    cardpile_offset: 8
+    cardpile_y: 10
+    cardpile_x: 0
+    cardpile_amount_padx: 80
+    cardpile_amount_pady: 50
+    cardpile_name_padx: 10
+    cardpile_name_pady: 50
+
+  # Deck
+    deck_pady: 0
+    deck_padx: 80
+
+  # Game pile
+    gamepile_pady: 20
+    gamepile_padx: 500
+
+  # Claimgrid
+    claimgrid_padx: 870
+    claimgrid_pady: 60
+    claimgrid_columns: 5
+    claimgrid_width: 50
+    claimgrid_height: 50
+
+
+  # Game pile
+    gamepile_hover_x: 14
+    gamepile_hover_y: 20
+
+  # Opponents
+    opponent_offset: 100
+    opponent_padx: 100
+    opponent_pady: 10

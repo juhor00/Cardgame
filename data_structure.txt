@@ -1,0 +1,88 @@
+JSON data structures
+
+FROM SERVER
+
+{
+"lobby":
+    {
+    "players":
+        [
+            {
+            "id":       (int) <id>
+            "name":     (str) <name>
+            "ready":    (bool) <state>
+            }
+            ...
+        ]
+    "start":    (bool) <state>
+    }
+"player":
+	{
+	"add": 		[ (str) <card> ...]
+	"remove": 	[ (str) <card> ...]
+	},
+
+"opponents":
+	[
+		{
+		"amount": 	(int) <amount>
+		"name":     (str) <name>
+		"won": 		(bool) <state>
+		"lost": 	(bool) <state>
+		"turn":     (bool) <state>
+		}
+	    ...
+	],
+"deck":
+	{
+	"amount":  (int) <amount>
+	"drawtop": (str) <card>
+	},
+"game":
+	{
+	"latest":	
+		{
+		"amount": 	(int) <amount>
+		"rank": 	(int) <rank>
+		}
+	"amount": 	(int) <amount>
+	"suspect":
+		{
+		"cards":	[ (str) <card> ...]
+		"lied":		(bool) <state>
+		}
+	"turn":     (bool) <state>
+	},
+"claimgrid":
+	{
+	"allowed": 	[ (int) <rank> ...]
+	denied: 	[ (int) <rank> ...]
+	},
+"turnlist":
+    [
+        {
+        "name":    (str) <name>
+        "id":      (int) <id>
+        }
+    ]
+}
+
+CLIENT TO SERVER
+
+{
+"general": "disconnect"
+"lobby":
+	{
+	"ready": 	(bool) <state)
+	"name": 	(str) <name>
+	}
+		
+"game":
+    {
+    "deck"      (bool) <state>
+    "gamepile"  (bool) <state>
+    "played"    [ (str) <card> ...]
+    "claimed"   (int) rank
+    "suspect"   (bool) <state>
+    }
+}

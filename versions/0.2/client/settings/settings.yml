@@ -1,0 +1,40 @@
+# Valepaska settings
+
+# Screen
+card_frame_height: 250
+screen_width: 1280
+screen_height: 720
+sidebar_width: 150
+
+# Hand cards
+
+# From each others
+card_padx: 40
+# From top of card frame, at least as much as elevate in card_settings.yml
+card_pady: 50
+
+# Colors
+green: #35654d
+grey: grey
+
+# Deck
+
+#How much cards are apart from each others
+deck_offset: 8
+# Relation to root
+deck_pady: 0
+deck_padx: 80
+
+#Game frame
+game_frame_pady: 260
+
+# Gamepile
+
+gamepile_pady: 0
+gamepile_padx: 500
+gamepile_offset: 8
+
+# Opponents frame, should fit card and name
+
+opponent_height: 230
+opponent_offset: 40
