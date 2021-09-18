@@ -161,9 +161,9 @@ class Server:
         - Opponents
         - Deck
         - Gamedeck
-        - Each player gets their own cards
+        - Players' cards
         """
-        self.send_opponent_data()
+        self.broadcast_opponent_data()
 
         deck_amount = self.game.deck.get_amount()
         deck_data = {"deck": {"amount": deck_amount}}
@@ -173,7 +173,9 @@ class Server:
         gamedeck_data = {"game": {"amount": gamedeck_amount}}
         self.sendall(gamedeck_data)
 
-    def send_opponent_data(self):
+        self.broadcast_player_data()
+
+    def broadcast_opponent_data(self):
         """
         Send opponent data to each player
         """
@@ -191,6 +193,19 @@ class Server:
 
             opponent_data = {"opponents": opponents}
             self.send(i, opponent_data)
+
+    def broadcast_player_data(self):
+        """
+        Broadcast player data to each player
+        """
+        for i in self.clients:
+            client = self.clients[i]
+            name = client.name
+            player = self.game.turnmanager.get_player(name)
+            cards = player.hand.get_cards()
+            player_data = {"player": {"cards": cards}}
+            self.send(i, player_data)
+
 
 
 if __name__ == '__main__':

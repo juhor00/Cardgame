@@ -51,6 +51,16 @@ class Deck:
         card = self.cards.pop(-1)
         return card
 
+    def get_cards(self):
+        """
+        Return all cards as str, don't remove
+        :return: list, str
+        """
+        cards = []
+        for card in self.cards:
+            cards.append(str(card))
+        return cards
+
     def has_card(self, card):
         """
         Return True if card is in deck

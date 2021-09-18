@@ -34,6 +34,9 @@ class Event:
         if "opponents" in message:
             self.opponent_event(message["opponents"])
 
+        if "player" in message:
+            self.player_event(message["player"])
+
     def lobby_event(self, data: dict):
         """
         Handle lobby events
@@ -98,5 +101,41 @@ class Event:
             name = opponent["name"]
             amount = opponent["amount"]
             self.gui.gamewindow.opponents.set_amount(name, amount)
+
+    def player_event(self, data: dict):
+        """
+        Handle player events
+        :param data: dict
+        """
+        if "cards" in data:
+            cards = data["cards"]
+            cards_dict = {}
+            for card in cards:
+                if card not in cards_dict:
+                    cards_dict[card] = 1
+                else:
+                    cards_dict[card] += 1
+
+            hand = self.gui.gamewindow.hand.get_cards()
+            hand_dict = {}
+            for card in hand:
+                if card not in hand_dict:
+                    hand_dict[card] = 1
+                else:
+                    hand_dict[card] += 1
+
+            for card in cards:
+                # Card is missing
+                if card not in hand_dict:
+                    for _ in range(cards_dict[card]):
+                        self.gui.gamewindow.hand.add_card(card)
+                # Too many cards in hand
+                elif hand_dict[card] > cards_dict[card]:
+                    for _ in range(hand_dict[card] - cards_dict[card]):
+                        self.gui.gamewindow.hand.remove_card(card)
+                # Too few cards in hand
+                elif hand_dict[card] < cards_dict[card]:
+                    for _ in range(cards_dict[card] - hand_dict[card]):
+                        self.gui.gamewindow.hand.add_card(card)
 
 
