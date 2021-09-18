@@ -27,6 +27,9 @@ class Player:
         print(self)
         self.hand.print()
 
+    def get_amount(self):
+        return self.hand.get_amount()
+
     def add(self, card):
         self.hand.add(card)
 

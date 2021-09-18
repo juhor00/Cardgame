@@ -20,8 +20,6 @@ class Game:
         Handle game events
         """
 
-        self.start()
-
         while len(self.turnmanager.get_players()) > 1:
 
             self.handle_suspect()

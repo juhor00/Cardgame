@@ -112,6 +112,7 @@ class Server:
         self.sendall({"turnlist": players})
 
         self.game.start(names)
+        self.broadcast_game()
         self.game.print()
 
     def event(self, client, data):
@@ -153,6 +154,43 @@ class Server:
         ready = self.check_start()
         data = {"lobby": {"players": players}, "ready": ready}
         self.sendall(data)
+
+    def broadcast_game(self):
+        """
+        Send game data to all players
+        - Opponents
+        - Deck
+        - Gamedeck
+        - Each player gets their own cards
+        """
+        self.send_opponent_data()
+
+        deck_amount = self.game.deck.get_amount()
+        deck_data = {"deck": {"amount": deck_amount}}
+        self.sendall(deck_data)
+
+        gamedeck_amount = self.game.gamedeck.get_amount()
+        gamedeck_data = {"game": {"amount": gamedeck_amount}}
+        self.sendall(gamedeck_data)
+
+    def send_opponent_data(self):
+        """
+        Send opponent data to each player
+        """
+        for i in self.clients:
+            client = self.clients[i]
+            player_id = client.id
+            opponents = []
+
+            for j in self.clients:
+                opponent_client = self.clients[j]
+                if opponent_client.id != player_id:
+                    player = self.game.turnmanager.get_player(opponent_client.name)
+                    amount = player.get_amount()
+                    opponents.append({"amount": amount, "name": player.get_name()})
+
+            opponent_data = {"opponents": opponents}
+            self.send(i, opponent_data)
 
 
 if __name__ == '__main__':

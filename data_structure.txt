@@ -29,7 +29,6 @@ FROM SERVER
 		"name":     (str) <name>
 		"won": 		(bool) <state>
 		"lost": 	(bool) <state>
-		"turn":     (bool) <state>
 		}
 	    ...
 	],

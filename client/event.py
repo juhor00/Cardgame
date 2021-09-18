@@ -25,6 +25,15 @@ class Event:
         if "turnlist" in message:
             self.turnlist_event(message["turnlist"])
 
+        if "deck" in message:
+            self.deck_event(message["deck"])
+
+        if "game" in message:
+            self.game_event(message["game"])
+
+        if "opponents" in message:
+            self.opponent_event(message["opponents"])
+
     def lobby_event(self, data: dict):
         """
         Handle lobby events
@@ -61,5 +70,33 @@ class Event:
                 name = "You"
             players.append(name)
         self.gui.gamewindow.turn.add_players(players)
+
+    def deck_event(self, data: dict):
+        """
+        Handle deck events
+        :param data: dict
+        """
+        if "amount" in data:
+            amount = data["amount"]
+            self.gui.gamewindow.deck.set_amount(amount)
+
+    def game_event(self, data: dict):
+        """
+        Handle game events
+        :param data: dict
+        """
+        if "amount" in data:
+            amount = data["amount"]
+            self.gui.gamewindow.gamedeck.set_amount(amount)
+
+    def opponent_event(self, data: dict):
+        """
+        Handle opponent events
+        :param data: dict
+        """
+        for opponent in data:
+            name = opponent["name"]
+            amount = opponent["amount"]
+            self.gui.gamewindow.opponents.set_amount(name, amount)
 
 
