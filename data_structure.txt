@@ -86,3 +86,16 @@ CLIENT TO SERVER
     "suspect"   (bool) <state>
     }
 }
+
+
+CLIENT/
+    client.py
+
+    GUI/
+    gui.py
+
+        GAME/
+        gamewindow.py
+
+            ASSETS/
+                kuva.png

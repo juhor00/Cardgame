@@ -34,13 +34,6 @@ class Client:
 
     def __init__(self):
         self.gui = Gui()
-
-        # TEST
-        """
-        self.gui.render_gamewindow()
-        self.gui.gamewindow.test_values()
-        self.gui.in_turn = True
-        """
         self.network = Network()
         user_id = self.network.get_id()
         self.event = Event(self.gui, user_id)
@@ -71,7 +64,7 @@ class Client:
     def send(self, message):
         """
         Send Message object to server
-        :param message: Message
+        :param message: dict
         """
         self.network.send(bytes(json.dumps(message), encoding="UTF-8"))
 

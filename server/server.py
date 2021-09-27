@@ -50,6 +50,7 @@ class Server:
     def handle(self, client):
         """
         Handle connected client
+        :param client: socket
         """
         while True:
             try:
@@ -69,14 +70,14 @@ class Server:
         """
         Send data to client
         :param client: socket client
-        :param data: data to JSON
+        :param data: dict
         """
         client.send(json.dumps(data).encode("UTF-8"))
 
     def sendall(self, data):
         """
         Send data to all clients
-        :param data: data to JSON
+        :param data: dict
         """
         for client in self.clients:
             self.send(client, data)

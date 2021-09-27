@@ -1,10 +1,10 @@
 from tkinter import *
 
 try:
-    from .mainwindow.mainwindow import MainWindow
+    from .mainwindow.gamewindow import GameWindow
     from .lobby.lobby import Lobby
 except ImportError:
-    from mainwindow.mainwindow import MainWindow
+    from mainwindow.gamewindow import GameWindow
     from lobby.lobby import Lobby
 
 
@@ -30,7 +30,7 @@ class Gui(Tk):
 
         self.size = (1280, 720)
         self.minsize(1280, 720)
-        self.gamewindow = MainWindow(self, self.size[0], self.size[1])
+        self.gamewindow = GameWindow(self, self.size[0], self.size[1])
         self.lobby = Lobby(self, self.size[0], self.size[1])
         self.render_lobby()
         self.in_turn = False

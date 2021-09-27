@@ -15,7 +15,7 @@ except ImportError:
     from claim import Claim
 
 
-class MainWindow(Frame):
+class GameWindow(Frame):
     """
     Game window
     """
@@ -93,7 +93,7 @@ class MainWindow(Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    mainwindow = MainWindow(root, 1280, 720)
+    mainwindow = GameWindow(root, 1280, 720)
     mainwindow.test_values()
     mainwindow.pack()
     root.mainloop()
