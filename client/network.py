@@ -8,6 +8,7 @@ class Network:
         port = 12345
         self.addr = (server, port)
         self.id = int(self.connect())
+        self.connected = bool(self.id)
 
         self.pending = []
 
@@ -20,7 +21,7 @@ class Network:
             print("Connected")
             return self.client.recv(2048).decode()
         except socket.error:
-            pass
+            return -1
 
     def disconnect(self):
         """
@@ -52,8 +53,7 @@ class Network:
             return packets[0]
         except socket.error:
             print("An error occurred!")
-            self.disconnect()
-            return "disconnect"
+            return "error"
 
     @staticmethod
     def split_packets(message):

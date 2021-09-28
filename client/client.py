@@ -39,7 +39,6 @@ class Client:
         self.event = Event(self.gui, user_id)
         new_thread(self.receive)
         self.set_binds()
-
         self.gui.mainloop()
 
     def __del__(self):
@@ -57,8 +56,8 @@ class Client:
                 message = json.loads(self.network.get())
                 print(message)
                 self.event.new(message)
-            except json.JSONDecodeError as e:
-                print(e)
+            except json.JSONDecodeError:
+                print("Stop receiving")
                 return
 
     def send(self, message):
