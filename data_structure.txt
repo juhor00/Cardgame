@@ -69,7 +69,10 @@ FROM SERVER
 CLIENT TO SERVER
 
 {
-"general": "disconnect"
+"general":
+        "disconnect",
+        "connect"
+
 "lobby":
 	{
 	"ready": 	(bool) <state)

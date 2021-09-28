@@ -49,9 +49,12 @@ class Server:
                 self.event.new(client, message)
             except socket.error:
                 # Disconnect
+                user = self.event.remove(client)
                 client.close()
-                print(f"{client} disconnected!")
+                print(f"{user} [{user.get_id()}] disconnected!")
                 self.id_count -= 1
+                self.event.broadcast_lobby()
+                self.event.broadcast_game()
                 return
 
     @staticmethod

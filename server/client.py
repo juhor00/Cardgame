@@ -12,9 +12,19 @@ class Client:
         self.id = id
         self.name = f"Player {id}"
         self.ready = False
+        self.in_game = False
 
     def __str__(self):
         return self.get_name()
+
+    def play(self):
+        self.in_game = True
+
+    def stop_playing(self):
+        self.in_game = False
+
+    def is_playing(self):
+        return self.in_game
 
     def get_socket(self):
         return self.socket

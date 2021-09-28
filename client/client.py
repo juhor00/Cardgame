@@ -35,7 +35,9 @@ class Client:
     def __init__(self):
         self.gui = Gui()
         self.network = Network()
+        self.send({"general": "connect"})
         user_id = self.network.get_id()
+        print("ID:", user_id)
         self.event = Event(self.gui, user_id)
         new_thread(self.receive)
         self.set_binds()

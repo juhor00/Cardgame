@@ -8,6 +8,7 @@ class Event:
 
         self.server = server
         self.game = Game()
+        self.in_lobby = True
 
         self.clients = []
 
@@ -20,13 +21,23 @@ class Event:
         client = Client(socket, client_id)
         self.clients.append(client)
 
-    def remove(self, client):
+    def remove(self, socket):
         """
         Remove a client
-        :param client: Client
+        :param socket: socket
         """
-        if client in self.clients:
-            self.clients.remove(client)
+        to_remove = self.get_client_by_socket(socket)
+        if to_remove in self.clients:
+            self.clients.remove(to_remove)
+
+        for client in self.clients:
+            if client.is_playing():
+                continue
+            self.in_lobby = True
+            break
+        print("In lobby: ", self.in_lobby)
+
+        return to_remove
 
     def get_client_by_socket(self, socket):
         """
@@ -75,7 +86,8 @@ class Event:
         :param client: Client
         :param data: dict
         """
-        pass
+        if data == "connect":
+            self.broadcast_lobby()
 
     def lobby_event(self, client, data):
         """
@@ -103,6 +115,8 @@ class Event:
         """
         Send lobby data to all players
         """
+        if not self.in_lobby:
+            return
         players = []
         for client in self.clients:
             players.append({"id": client.get_id(), "name": client.get_name(), "ready": client.is_ready()})
@@ -117,6 +131,8 @@ class Event:
         - Gamedeck
         - Players' cards
         """
+        if self.in_lobby:
+            return
         self.broadcast_opponent_data()
 
         deck_amount = self.game.deck.get_amount()
@@ -165,6 +181,11 @@ class Event:
         Return True if all player are ready in lobby
         :return: bool
         """
+        if not self.in_lobby:
+            return False
+
+        if len(self.clients) < 2:
+            return False
         for client in self.clients:
             if not client.is_ready():
                 return False
@@ -176,3 +197,6 @@ class Event:
         :return:
         """
         print("START")
+        self.in_lobby = False
+        for client in self.clients:
+            client.play()
