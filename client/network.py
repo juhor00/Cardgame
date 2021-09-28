@@ -8,12 +8,15 @@ class Network:
         port = 12345
         self.addr = (server, port)
         self.id = int(self.connect())
-        self.connected = bool(self.id)
+        self.connected = False if self.id == -1 else True
 
         self.pending = []
 
     def get_id(self):
         return self.id
+
+    def is_connected(self):
+        return self.connected
 
     def connect(self):
         try:
@@ -30,6 +33,7 @@ class Network:
         try:
             self.client.close()
             print("Disconnected")
+            self.connected = False
         except socket.error:
             pass
 

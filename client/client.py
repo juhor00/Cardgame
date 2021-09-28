@@ -56,8 +56,8 @@ class Client:
                 message = json.loads(self.network.get())
                 print(message)
                 self.event.new(message)
-            except json.JSONDecodeError:
-                print("Stop receiving")
+            except json.JSONDecodeError as e:
+                print("Stop receiving:", e)
                 return
 
     def send(self, message):
@@ -65,7 +65,8 @@ class Client:
         Send Message object to server
         :param message: dict
         """
-        self.network.send(bytes(json.dumps(message), encoding="UTF-8"))
+        if self.network.is_connected():
+            self.network.send(bytes(json.dumps(message), encoding="UTF-8"))
 
     def set_binds(self):
         """
