@@ -37,6 +37,9 @@ class Event:
         if "player" in message:
             self.player_event(message["player"])
 
+        if "claimgrid" in message:
+            self.claimgrid_event(message["claimgrid"])
+
     def lobby_event(self, data: dict):
         """
         Handle lobby events
@@ -91,6 +94,10 @@ class Event:
         if "amount" in data:
             amount = data["amount"]
             self.gui.gamewindow.gamedeck.set_amount(amount)
+        if "latest" in data:
+            amount = data["amount"]
+            rank = data["rank"]
+            self.gui.gamewindow.claim.new(amount, rank)
 
     def opponent_event(self, data: dict):
         """
@@ -137,5 +144,15 @@ class Event:
                 elif hand_dict[card] < cards_dict[card]:
                     for _ in range(cards_dict[card] - hand_dict[card]):
                         self.gui.gamewindow.hand.add_card(card)
+
+    def claimgrid_event(self, data: dict):
+        """
+        Handle claimgrid events
+        :param data: dict
+        """
+        if "allowed" in data:
+            self.gui.gamewindow.claimgrid.enable_buttons(data["allowed"])
+        if "denied" in data:
+            self.gui.gamewindow.claimgrid.disable_buttons(data["denied"])
 
 

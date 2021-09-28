@@ -18,9 +18,8 @@ FROM SERVER
     }
 "player":
 	{
-	"add": 		[ (str) <card> ...]
-	"remove": 	[ (str) <card> ...]
 	"cards":    [ (str) <card> ...]
+	"interact": (bool) <state>
 	},
 
 "opponents":

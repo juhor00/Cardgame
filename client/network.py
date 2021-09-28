@@ -4,7 +4,7 @@ import socket
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server = "192.168.2.132"
+        server = "192.168.0.178"
         port = 12345
         self.addr = (server, port)
         self.id = int(self.connect())
@@ -19,7 +19,7 @@ class Network:
             self.client.connect(self.addr)
             print("Connected")
             return self.client.recv(2048).decode()
-        except:
+        except socket.error:
             pass
 
     def disconnect(self):
@@ -79,9 +79,6 @@ class Network:
                     packet = message[open_index:index+1]
                     packets.append(packet)
         return packets
-
-
-
 
     def send(self, data):
         """

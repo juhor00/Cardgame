@@ -40,7 +40,7 @@ class Gui(Tk):
     def set_turn(self, state):
         self.in_turn = state
 
-    def render_gamewindow(self, *args):
+    def render_gamewindow(self):
         """
         Renders gamewindow and hide lobby
         """
@@ -95,5 +95,4 @@ class Gui(Tk):
 if __name__ == "__main__":
     gui = Gui()
     gui.lobby.bind("<<Ready>>", gui.render_gamewindow)
-    #gui.gamewindow.test_values()
     gui.mainloop()

@@ -263,14 +263,6 @@ class Game:
 
         return True
 
-
-    def get_hand(self, id):
-        """
-        Get cards of player ID
-        :param id: int
-        :return:
-        """
-
     def print(self):
         """
         Print game status
