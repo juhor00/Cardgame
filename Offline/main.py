@@ -1,4 +1,4 @@
-from game import Game
+from game_old import Game
 from lobby import Lobby
 
 
