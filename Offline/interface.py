@@ -15,11 +15,15 @@ class Interface:
         Mainloop of interface
         """
         while len(self.game.turnmanager.get_players()) > 1:
+            self.game.print()
             print("Actions: [P] play cards, [S] suspect, [D] play deck card")
             action = input("What action is done? ")
             if action.upper() == "P":
-                cards = interface.play_cards()
-                interface.game.gamedeck.add_multiple(cards)
+                interface.play_cards()
+            elif action.upper() == "S":
+                interface.suspect()
+            elif action.upper() == "D":
+                interface.play_deck()
 
     @staticmethod
     def create_players():
@@ -52,7 +56,7 @@ class Interface:
     def play_cards(self):
         """
         Ask for player and play cards
-        :return: list of str, cards
+        :return: bool, success
         """
         while True:
             print("In turn:", self.game.turnmanager.get_active_player())
@@ -73,12 +77,39 @@ class Interface:
             if not self.game.correct_amount_of_cards(cards):
                 print("Incorrect amount of cards")
                 continue
-            break
 
-        claim = input("Claim cards (2-14): ")
-        return cards
+            while True:
+                claim = input("Claim cards (2-14): ")
+                try:
+                    claim = int(claim)
+                    break
+                except TypeError:
+                    print("Error: not integer")
 
+            if not self.game.is_allowed_play(cards, claim):
+                print("Error: that play was not allowed!")
+                continue
+            else:
+                return self.game.play(player, cards, claim)
 
+    def suspect(self):
+        """
+        Ask for player and suspect cards
+        """
+        while True:
+            print("Choose player who suspects")
+            player = self.get_player()
+            if player == self.game.last_played_player:
+                print("Error: player who suspects can't be the one who played cards")
+            else:
+                break
+        self.game.suspect(player)
+
+    def play_deck(self):
+        """
+        Ask for player and play deck top card
+        """
+        pass
 
 
 if __name__ == "__main__":

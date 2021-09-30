@@ -26,6 +26,14 @@ class Deck:
         """
         self.cards.remove(card)
 
+    def remove_multiple(self, cards):
+        """
+        Remove multiple cards
+        :param cards: list of str
+        """
+        for card in cards:
+            self.remove(Card(card))
+
     def is_empty(self):
         """
         Return True if there are no cards
@@ -119,6 +127,8 @@ class GameDeck(Deck):
         :param cards: list of cards
         """
         for card in cards:
+            if type(card) == str:
+                card = Card(card)
             super().add(card)
         self.last_amount = len(cards)
 

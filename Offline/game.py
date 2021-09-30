@@ -17,6 +17,7 @@ class Game:
         self.deck = Deck()
         self.gamedeck = GameDeck()
         self.turnmanager = TurnManager(players)
+        self.last_played_player = self.turnmanager.get_active_player()
 
     def start(self):
         """
@@ -32,14 +33,50 @@ class Game:
         for player in self.turnmanager.get_players():
             self.draw_cards(self.deck, player, 5)
 
+    def print(self):
+        """
+        Print current game state
+        """
+        print("Players:")
+        for player in self.turnmanager.get_players():
+            print(f" {player} [{player.hand.get_amount()}]")
+        print(f"Deck [{self.deck.get_amount()}]")
+        print(f"Gamedeck [{self.gamedeck.get_amount()}]")
+        print(f"Last played: [{self.gamedeck.get_last_rank()}] x{self.gamedeck.get_last_amount()}")
+
+    def play(self, player, cards, claim):
+        """
+        Play cards
+        :param player: Player
+        :param cards: list of str
+        :param claim: int
+        :return: bool
+        """
+        if not player == self.turnmanager.get_active_player():
+            return False
+        for card in cards:
+            if not player.hand.has_card(card):
+                return False
+        if not self.is_allowed_play(cards, claim):
+            return False
+
+        self.gamedeck.add_multiple(cards)
+        self.gamedeck.claim(claim)
+        player.hand.remove_multiple(cards)
+        self.draw_to_five()
+        self.last_played_player = player
+        self.turnmanager.change_turn()
+
     def suspect(self, player):
         """
         Suspecting action
+        :param player: Player, who suspects
         """
+        claimer = self.last_played_player
         if self.gamedeck.lied():
             # Player who claimed the cards draw all
             # Player who suspected gets the turn
-            claimer = self.turnmanager.get_active_player()
+
             self.draw_all(self.gamedeck, claimer)
             self.turnmanager.turn_to(player.get_name())
             print(f"Lied! {claimer} draws all cards and turn jumps to {player}")
@@ -48,7 +85,7 @@ class Game:
             # Player who claimed keeps the turn
             self.draw_all(self.gamedeck, player)
             print(f"Didn't lie! {player} draws all cards and turn stays")
-        self.turnmanager.stay_next_turn()
+            self.turnmanager.turn_to(claimer.get_name())
 
     def handle_remove(self):
         """
