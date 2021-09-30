@@ -84,7 +84,7 @@ class TurnManager:
     def get_player(self, name):
         """
         Get player by name
-        :param name: str
+        :param name: Player
         """
         for player_id in self.players:
             player = self.players[player_id]

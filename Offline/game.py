@@ -67,26 +67,6 @@ class Game:
                 print(f"{self.turnmanager.get_active_player()} has won!")
                 self.turnmanager.force_next_turn()
 
-    def correct_amount_of_cards(self, cards):
-        """
-        Return True if the amount of cards is allowed
-        :param cards: list
-        :return: bool
-        """
-        if self.gamedeck.get_last_rank() == 2:
-            if len(cards) == 1:
-                return True
-            else:
-                return False
-
-        if len(cards) > 4:
-            return False
-
-        if len(cards) == 0:
-            return False
-
-        return True
-
     def draw_all(self, source: Deck, player: Player):
         """
         Draws all cards from source
@@ -121,6 +101,22 @@ class Game:
                 player.add(card)
             else:
                 break
+
+    def is_allowed_play(self, cards, claim):
+        """
+        Return True if cards are allowed to be played
+        :param cards: list of str
+        :param claim: int, claimed rank
+        :return: bool
+        """
+        if not self.is_allowed_rank(claim):
+            print(f"Error: Invalid claim")
+            return False
+        if not self.correct_amount_of_cards(cards):
+            print("Error: Invalid amount of cards")
+            return False
+
+        return True
 
     def is_allowed_rank(self, rank):
         """
@@ -158,5 +154,25 @@ class Game:
         if rank > 10 and self.gamedeck.get_last_rank() is None:
             if not self.deck.is_empty():
                 return False
+
+        return True
+
+    def correct_amount_of_cards(self, cards):
+        """
+        Return True if the amount of cards is allowed
+        :param cards: list
+        :return: bool
+        """
+        if self.gamedeck.get_last_rank() == 2:
+            if len(cards) == 1:
+                return True
+            else:
+                return False
+
+        if len(cards) > 4:
+            return False
+
+        if len(cards) == 0:
+            return False
 
         return True
