@@ -39,7 +39,11 @@ class Game:
         """
         print("Players:")
         for player in self.turnmanager.get_players():
-            print(f" {player} [{player.hand.get_amount()}]")
+            print(f" {player} [{player.hand.get_amount()}]", end="")
+            if self.turnmanager.get_active_player() == player:
+                print(" *")
+            else:
+                print()
         print(f"Deck [{self.deck.get_amount()}]")
         print(f"Gamedeck [{self.gamedeck.get_amount()}]")
         print(f"Last played: [{self.gamedeck.get_last_rank()}] x{self.gamedeck.get_last_amount()}")
@@ -71,7 +75,11 @@ class Game:
         """
         Suspecting action
         :param player: Player, who suspects
+        :return: bool
         """
+        if self.gamedeck.is_empty():
+            return False
+
         claimer = self.last_played_player
         if self.gamedeck.lied():
             # Player who claimed the cards draw all
@@ -86,6 +94,7 @@ class Game:
             self.draw_all(self.gamedeck, player)
             print(f"Didn't lie! {player} draws all cards and turn stays")
             self.turnmanager.turn_to(claimer.get_name())
+        return True
 
     def handle_remove(self):
         """
