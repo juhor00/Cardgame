@@ -86,6 +86,7 @@ class Event:
             turn = player["turn"]
             if user_id == self.id:
                 name = "You"
+                self.gui.set_turn(turn)
             self.gui.gamewindow.turn.set_turn(name, turn)
 
     def deck_event(self, data: dict):
@@ -113,9 +114,13 @@ class Event:
             rank = claim_data["rank"]
             self.gui.gamewindow.claim.new(amount, rank)
 
-        if "turn" in data:
-            turn = data["turn"]
-            self.gui.set_turn(turn)
+        if "display" in data:
+            cards = data["display"]
+            if len(cards) == 0:
+                self.gui.gamewindow.play_cards.empty()
+            else:
+                self.gui.gamewindow.play_cards.add_cards(cards)
+
 
     def opponent_event(self, data: dict):
         """

@@ -19,7 +19,6 @@ FROM SERVER
 "player":
 	{
 	"cards":    [ (str) <card> ...]
-	"interact": (bool) <state>
 	},
 
 "opponents":

@@ -213,20 +213,8 @@ class Event:
             name = client.name
             player = self.game.turnmanager.get_player(name)
             cards = player.hand.get_cards()
-            personal_data = {"player": {"cards": cards}}
-
-            # Turn
-            in_turn_id = self.game.turnmanager.get_active_player().get_id()
-            if client.id == in_turn_id:
-                turn = True
-            else:
-                if self.game.turnmanager.is_first_round():
-                    turn = True
-                else:
-                    turn = False
-            personal_data["game"] = {"turn": turn}
-
-            self.send(client, personal_data)
+            player_data = {"player": {"cards": cards}}
+            self.send(client, player_data)
 
     def broadcast_turn(self):
         """
