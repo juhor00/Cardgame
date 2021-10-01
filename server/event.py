@@ -127,13 +127,16 @@ class Event:
 
             # Game deck discard check
             if self.game.gamedeck.to_discard():
-                    new_thread(self.wait_for_discard)
+                new_thread(self.wait_for_discard)
+
+            self.broadcast_game()
 
         if "suspect" in data:
             player = self.get_player(client)
+            self.broadcast_pause()
+            self.broadcast_played_cards()
             self.game.suspect(player)
-
-        self.broadcast_game()
+            new_thread(self.wait_for_display)
 
     def broadcast_lobby(self):
         """
@@ -240,6 +243,31 @@ class Event:
             player_data.append({"name": name, "id": user_id, "turn": turn})
         self.sendall({"turnlist": player_data})
 
+    def broadcast_pause(self):
+        """
+        Broadcast info that pauses the game
+        No one is in turn until broadcasted otherwise
+        """
+        player_data = []
+        for player in self.game.turnmanager.get_players():
+            user_id = player.get_id()
+            name = player.get_name()
+            turn = False
+            player_data.append({"name": name, "id": user_id, "turn": turn})
+        self.sendall({"turnlist": player_data})
+
+    def broadcast_played_cards(self):
+        """
+        Broadcasts last played cards
+        """
+        print(self.game.gamedeck.cards)
+        all_cards = self.game.gamedeck.get_cards()
+        print("All", all_cards)
+        amount = self.game.gamedeck.get_last_amount()
+        cards = all_cards[-amount:]
+        print("Cards", cards)
+        self.sendall({"game": {"display": cards}})
+
     def check_start(self):
         """
         Return True if all player are ready in lobby
@@ -276,7 +304,7 @@ class Event:
         """
         return self.game.turnmanager.get_player(client.get_name())
 
-    def wait_for_discard(self, wait=10):
+    def wait_for_discard(self, wait=5):
         """
         Start discard waiting (ONLY CALL IN A THREAD)
         Calls discard method after waiting
@@ -285,4 +313,14 @@ class Event:
         print(f"Waiting {wait} seconds to discard")
         sleep(wait)
         self.game.discard()
+        self.broadcast_game()
+
+    def wait_for_display(self, wait=5):
+        """
+        Show display cards for <wait> seconds and continue after
+        :param wait: int, seconds
+        """
+        print(f"Waiting {wait} seconds for displaying")
+        sleep(wait)
+        self.sendall({"game": {"display": []}})
         self.broadcast_game()

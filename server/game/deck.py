@@ -140,6 +140,7 @@ class GameDeck(Deck):
             if type(card) == str:
                 card = Card(card)
             super().add(card)
+            print("Add", card)
         self.last_amount = len(cards)
 
     def claim(self, rank):

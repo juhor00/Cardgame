@@ -51,6 +51,7 @@ FROM SERVER
 		"lied":		(bool) <state>
 		}
 	"turn":     (bool) <state>  # Client's turn
+	"display":  [   (str) <card> ...]   # Play cards that can't be removed
 	},
 "claimgrid":
 	{

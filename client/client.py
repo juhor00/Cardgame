@@ -120,6 +120,7 @@ class Client:
         :param _: event
         """
         print("Send: suspect")
+        self.send({"game": {"suspect": True}})
 
     def on_deck(self, _):
         """
