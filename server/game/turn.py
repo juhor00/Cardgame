@@ -2,24 +2,33 @@
 A module to handle turns and players
 """
 
-
-try:
-    from .player import Player
-except ImportError:
-    from player import Player
-
 PLAYER_AMOUNT = 4
 
 
 class TurnManager:
 
-    def __init__(self):
+    def __init__(self, players):
 
-        self.turnlist = []
+        self.turnlist = players
         self.turn = 0
+        self.all_can_play = True
         self.allowed_to_change = True
         self.active_player = None
-        self.players = {}
+        self.players = self.create_players_dict(players)
+        self.active_player = self.turnlist[self.turn]
+
+    @staticmethod
+    def create_players_dict(players):
+        """
+        Create a dictionary of players based on their id's
+        :param players: list of Players
+        :return: dict, id : Player
+        """
+        players_by_id = {}
+        for player in players:
+            player_id = player.get_id()
+            players_by_id[player_id] = player
+        return players_by_id
 
     def stay_next_turn(self):
         """
@@ -37,6 +46,7 @@ class TurnManager:
         """
         Changes the turn
         """
+        self.all_can_play = False
         if not self.allowed_to_change:
             self.allowed_to_change = True
             return
@@ -46,25 +56,14 @@ class TurnManager:
             self.turn = 0
         self.active_player = self.turnlist[self.turn]
 
-    def create_players(self, players):
-        """
-        Create players to the game
-        :param players: list of str
-        """
-        for name in players:
-            self.players[name] = Player(name)
-            self.turnlist.append(self.players[name])
-
-        self.active_player = self.turnlist[self.turn]
-
     def get_players(self):
         """
         Return list of all players
         :return: list, Player
         """
         players = []
-        for name in self.players:
-            players.append(self.players[name])
+        for player_id in self.players:
+            players.append(self.players[player_id])
 
         return players
 
@@ -75,7 +74,8 @@ class TurnManager:
         """
 
         names = []
-        for name in self.players:
+        for player_id in self.players:
+            name = self.players[player_id].get_name()
             names.append(name)
 
         return sorted(names)
@@ -83,12 +83,13 @@ class TurnManager:
     def get_player(self, name):
         """
         Get player by name
-        :param name: str
+        :param name: Player
         """
-        if name not in self.get_names():
-            return None
-
-        return self.players[name]
+        for player_id in self.players:
+            player = self.players[player_id]
+            if player.get_name() == name:
+                return player
+        return None
 
     def get_active_player(self):
         """
@@ -102,8 +103,8 @@ class TurnManager:
         Removes the active player
         """
         self.turnlist.remove(self.active_player)
-        name = str(self.active_player)
-        del(self.players[name])
+        player_id = self.active_player.get_id()
+        del(self.players[player_id])
         self.allowed_to_change = True
 
     def turn_to(self, name):
@@ -113,7 +114,7 @@ class TurnManager:
         """
         if name not in self.get_names():
             return
-        while name != self.active_player.name:
+        while name != self.active_player.get_name():
             self.change_turn()
 
     def print(self):
@@ -122,8 +123,7 @@ class TurnManager:
         """
         print("Players: ")
         for name in self.get_names():
-            player = self.players[name]
-            print(f"  {name} [{player.hand.get_amount()}]")
+            print(f"  {name}")
 
     def print_others(self):
         """
@@ -131,5 +131,12 @@ class TurnManager:
         """
         print("Players: ")
         for name in self.get_names():
-            if name is not self.active_player.name:
+            if name is not self.active_player.get_name():
                 print(f"  {name}")
+
+    def is_first_round(self):
+        """
+        Return True if it's first round and all can play
+        :return: bool
+        """
+        return self.all_can_play

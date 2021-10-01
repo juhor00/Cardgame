@@ -91,6 +91,8 @@ class Event:
         Handle game events
         :param data: dict
         """
+        self.gui.gamewindow.play_cards.empty()
+        self.gui.gamewindow.remove_play_cards()
         if "amount" in data:
             amount = data["amount"]
             self.gui.gamewindow.gamedeck.set_amount(amount)
@@ -98,6 +100,10 @@ class Event:
             amount = data["amount"]
             rank = data["rank"]
             self.gui.gamewindow.claim.new(amount, rank)
+
+        if "turn" in data:
+            turn = data["turn"]
+            self.gui.set_turn(turn)
 
     def opponent_event(self, data: dict):
         """

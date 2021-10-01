@@ -1,7 +1,4 @@
-try:
-    from .card import *
-except ImportError:
-    from card import *
+from game.card import *
 import random
 import time
 
@@ -29,6 +26,14 @@ class Deck:
         """
         self.cards.remove(card)
 
+    def remove_multiple(self, cards):
+        """
+        Remove multiple cards
+        :param cards: list of str
+        """
+        for card in cards:
+            self.remove(Card(card))
+
     def is_empty(self):
         """
         Return True if there are no cards
@@ -50,16 +55,6 @@ class Deck:
         """
         card = self.cards.pop(-1)
         return card
-
-    def get_cards(self):
-        """
-        Return all cards as str, don't remove
-        :return: list, str
-        """
-        cards = []
-        for card in self.cards:
-            cards.append(str(card))
-        return cards
 
     def has_card(self, card):
         """
@@ -111,18 +106,23 @@ class Deck:
         for card in sorted(self.cards):
             print(f" {card}")
 
-    def print_amount(self):
-        """
-        Prints amount
-        """
-        print(f"[{self.get_amount()}]")
-
     def shuffle(self):
         """
         Shuffle the deck
         """
         random.seed(time.time())
         random.shuffle(self.cards)
+
+    def get_cards(self):
+        """
+        Return cards in str format
+        :return: list of str
+        """
+        cards = []
+        for card in self.cards:
+            print(card)
+            cards.append(str(card))
+        return cards
 
 
 class GameDeck(Deck):
@@ -138,6 +138,8 @@ class GameDeck(Deck):
         :param cards: list of cards
         """
         for card in cards:
+            if type(card) == str:
+                card = Card(card)
             super().add(card)
         self.last_amount = len(cards)
 

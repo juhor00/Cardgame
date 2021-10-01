@@ -102,13 +102,15 @@ class Client:
         Action when player claims played cards
         :param event: contains event data
         """
-        rank = event.data["content"]
+        rank = int(event.data["content"])
         cards = self.gui.gamewindow.play_cards.get_cards()
+        self.gui.gamewindow.play_cards.empty()
+        self.gui.gamewindow.remove_play_cards()
 
         if self.gui.in_turn:
             print("Send: claim", rank, cards)
-        elif len(cards) == 1:
-            print("Send: deck claim", rank, cards)
+            data = {"game": {"played": cards, "claimed": rank}}
+            self.send(data)
         else:
             print("Not allowed claim", rank, cards)
 
@@ -117,10 +119,7 @@ class Client:
         Action when player suspects
         :param _: event
         """
-        if not self.gui.in_turn:
-            print("Send: suspect")
-        else:
-            print("Not allowed suspect")
+        print("Send: suspect")
 
     def on_deck(self, _):
         """

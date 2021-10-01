@@ -226,6 +226,14 @@ class Hand(Frame):
         max_cards = 10
         return amount - max_cards
 
+    def empty(self):
+        """
+        Empty hand cards
+        """
+        self.erase()
+        self.cards = []
+        self.draw()
+
 
 if __name__ == "__main__":
     root = Tk()

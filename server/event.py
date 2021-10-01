@@ -7,8 +7,8 @@ class Event:
     def __init__(self, server):
 
         self.server = server
-        self.game = Game()
         self.in_lobby = True
+        self.game = None
 
         self.clients = []
 
@@ -35,6 +35,8 @@ class Event:
                 continue
             self.in_lobby = True
             break
+        if len(self.clients) == 0:
+            self.in_lobby = True
         print("In lobby: ", self.in_lobby)
 
         return to_remove
@@ -109,7 +111,17 @@ class Event:
         :param client: Client
         :param data: dict
         """
-        pass
+        if "played" in data:
+            cards = data["played"]
+            claimed = data["claimed"]
+            player = self.get_player(client)
+            self.game.play(player, cards, claimed)
+
+        if "suspect" in data:
+            player = self.get_player(client)
+            self.game.suspect(player)
+
+        self.broadcast_game()
 
     def broadcast_lobby(self):
         """
@@ -149,32 +161,41 @@ class Event:
         """
         Send opponent data to each player
         """
-        for i in self.clients:
-            client = self.clients[i]
+        for client in self.clients:
             player_id = client.id
             opponents = []
 
-            for j in self.clients:
-                opponent_client = self.clients[j]
+            for opponent_client in self.clients:
                 if opponent_client.id != player_id:
                     player = self.game.turnmanager.get_player(opponent_client.name)
-                    amount = player.get_amount()
+                    amount = player.hand.get_amount()
                     opponents.append({"amount": amount, "name": player.get_name()})
 
             opponent_data = {"opponents": opponents}
-            self.send(i, opponent_data)
+            self.send(client, opponent_data)
 
     def broadcast_player_data(self):
         """
-        Broadcast player data to each player
+        Broadcast personal data to each player
         """
-        for i in self.clients:
-            client = self.clients[i]
+        for client in self.clients:
             name = client.name
             player = self.game.turnmanager.get_player(name)
             cards = player.hand.get_cards()
-            player_data = {"player": {"cards": cards}}
-            self.send(i, player_data)
+            personal_data = {"player": {"cards": cards}}
+
+            # Turn
+            in_turn_id = self.game.turnmanager.get_active_player().get_id()
+            if client.id == in_turn_id:
+                turn = True
+            else:
+                if self.game.turnmanager.is_first_round():
+                    turn = True
+                else:
+                    turn = False
+            personal_data["game"] = {"turn": turn}
+
+            self.send(client, personal_data)
 
     def check_start(self):
         """
@@ -198,5 +219,18 @@ class Event:
         """
         print("START")
         self.in_lobby = False
+        players = []
         for client in self.clients:
             client.play()
+            players.append((client.get_id(), client.get_name()))
+        self.game = Game(players)
+        self.game.start()
+        self.broadcast_game()
+
+    def get_player(self, client):
+        """
+        Get game player by client
+        :param client: Client
+        :return: Player
+        """
+        return self.game.turnmanager.get_player(client.get_name())
