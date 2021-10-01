@@ -3,14 +3,6 @@ from game.player import Player
 from game.deck import Deck, GameDeck
 from game.turn import TurnManager
 
-from time import sleep
-from threading import Thread
-
-
-def new_thread(target, daemon=True, args=()):
-    thread = Thread(target=target, args=args, daemon=daemon)
-    thread.start()
-
 
 class Game:
 
@@ -65,18 +57,21 @@ class Game:
         :param claim: int
         :return: bool
         """
-        # First round anyone can play
-        if self.turnmanager.is_first_round():
-            self.turnmanager.turn_to(player.get_name())
 
-        # Check if is allowed to play
-        if not player == self.turnmanager.get_active_player():
-            return False
         for card in cards:
             if not player.hand.has_card(card):
                 return False
         if not self.is_allowed_play(cards, claim):
             return False
+
+        # First round anyone can play
+        if self.turnmanager.is_first_round():
+            self.turnmanager.turn_to(player.get_name())
+
+        # Check if is allowed to play
+        else:
+            if not player == self.turnmanager.get_active_player():
+                return False
 
         # Player who played last won
         if self.last_played_player.hand.is_empty():
@@ -88,11 +83,6 @@ class Game:
         player.hand.remove_multiple(cards)
         self.draw_to_five()
         self.last_played_player = player
-
-        # Game deck discard check
-        if self.gamedeck.to_discard():
-            new_thread(self.discard_wait)
-
         self.turnmanager.change_turn()
 
     def suspect(self, player):
@@ -126,16 +116,6 @@ class Game:
         :param player:
         :return:
         """
-
-    def discard_wait(self, wait=10):
-        """
-        Start discard waiting (ONLY CALL IN A THREAD)
-        Calls discard method after waiting
-        :param wait: int, waiting time in seconds
-        """
-        print(f"Waiting {wait} seconds to discard")
-        sleep(wait)
-        self.discard()
 
     def discard(self):
         """

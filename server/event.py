@@ -1,6 +1,14 @@
 from game.game import Game
 from client import Client
 
+from time import sleep
+from threading import Thread
+
+
+def new_thread(target, daemon=True, args=()):
+    thread = Thread(target=target, args=args, daemon=daemon)
+    thread.start()
+
 
 class Event:
 
@@ -117,6 +125,10 @@ class Event:
             player = self.get_player(client)
             self.game.play(player, cards, claimed)
 
+            # Game deck discard check
+            if self.game.gamedeck.to_discard():
+                    new_thread(self.wait_for_discard)
+
         if "suspect" in data:
             player = self.get_player(client)
             self.game.suspect(player)
@@ -228,7 +240,6 @@ class Event:
             player_data.append({"name": name, "id": user_id, "turn": turn})
         self.sendall({"turnlist": player_data})
 
-
     def check_start(self):
         """
         Return True if all player are ready in lobby
@@ -246,10 +257,8 @@ class Event:
 
     def start(self):
         """
-
-        :return:
+        Get joined players and start the game
         """
-        print("START")
         self.in_lobby = False
         players = []
         for client in self.clients:
@@ -266,3 +275,14 @@ class Event:
         :return: Player
         """
         return self.game.turnmanager.get_player(client.get_name())
+
+    def wait_for_discard(self, wait=10):
+        """
+        Start discard waiting (ONLY CALL IN A THREAD)
+        Calls discard method after waiting
+        :param wait: int, waiting time in seconds
+        """
+        print(f"Waiting {wait} seconds to discard")
+        sleep(wait)
+        self.game.discard()
+        self.broadcast_game()
