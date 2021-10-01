@@ -2,6 +2,14 @@ from player import Player
 from deck import Deck, GameDeck
 from turn import TurnManager
 
+from time import sleep
+from threading import Thread
+
+
+def new_thread(target, daemon=True, args=()):
+    thread = Thread(target=target, args=args, daemon=daemon)
+    thread.start()
+
 
 class Game:
 
@@ -64,11 +72,21 @@ class Game:
         if not self.is_allowed_play(cards, claim):
             return False
 
+        # Player who played last won
+        if self.last_played_player.hand.is_empty():
+            print(self.last_played_player, "won!")
+
+        # Play cards
         self.gamedeck.add_multiple(cards)
         self.gamedeck.claim(claim)
         player.hand.remove_multiple(cards)
         self.draw_to_five()
         self.last_played_player = player
+
+        # Game deck discard check
+        if self.gamedeck.to_discard():
+            new_thread(self.discard_wait)
+
         self.turnmanager.change_turn()
 
     def suspect(self, player):
@@ -95,6 +113,33 @@ class Game:
             print(f"Didn't lie! {player} draws all cards and turn stays")
             self.turnmanager.turn_to(claimer.get_name())
         return True
+
+    def deck_play(self, player):
+        """
+
+        :param player:
+        :return:
+        """
+
+    def discard_wait(self, wait=10):
+        """
+        Start discard waiting (ONLY CALL IN A THREAD)
+        Calls discard method after waiting
+        :param wait: int, waiting time in seconds
+        """
+        print(f"Waiting {wait} seconds to discard")
+        sleep(wait)
+        self.discard()
+
+    def discard(self):
+        """
+        Discard game deck and turn stays to the player who last played
+        Only discard_wait should call this method
+        """
+        if self.gamedeck.to_discard():
+            self.gamedeck.empty()
+            self.turnmanager.turn_to(self.last_played_player.get_name())
+            print("Discarded")
 
     def handle_remove(self):
         """
