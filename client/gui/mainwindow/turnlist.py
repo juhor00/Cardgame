@@ -36,16 +36,18 @@ class TurnList(Frame):
             if type(widget) == Player:
                 widget.config(width=max_len)
 
-    def set_turn(self, name):
+    def set_turn(self, name, turn):
         """
         Mark player active
         :param name: str
+        :param turn: bool, in turn
         """
         for player in self.players:
             if str(player) == name:
-                player.set_active()
-            else:
-                player.set_inactive()
+                if turn:
+                    player.set_active()
+                else:
+                    player.set_inactive()
 
     def is_empty(self):
         return len(self.players) == 0

@@ -38,6 +38,9 @@ class CardPile(Frame):
         """
         Draws the pile
         """
+        for widget in self.winfo_children():
+            widget.place_forget()
+
         pad = 8
         # Cards
         card_amount = self.amount
@@ -89,6 +92,9 @@ class InteractPile(CardPile):
         self.top = None
 
     def draw(self):
+
+        for widget in self.winfo_children():
+            widget.place_forget()
 
         pad = 8
         hover_y = 20

@@ -120,7 +120,6 @@ class Deck:
         """
         cards = []
         for card in self.cards:
-            print(card)
             cards.append(str(card))
         return cards
 

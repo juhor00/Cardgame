@@ -68,14 +68,25 @@ class Event:
         Handle turnlist events
         :param data: dict
         """
-        players = []
+        # Create turnlist
+        if self.gui.gamewindow.turn.is_empty():
+            players = []
+            for player in data:
+                name = player["name"]
+                user_id = player["id"]
+                if user_id == self.id:
+                    name = "You"
+                players.append(name)
+            self.gui.gamewindow.turn.add_players(players)
+
+        # Update turnlist
         for player in data:
             name = player["name"]
             user_id = player["id"]
+            turn = player["turn"]
             if user_id == self.id:
                 name = "You"
-            players.append(name)
-        self.gui.gamewindow.turn.add_players(players)
+            self.gui.gamewindow.turn.set_turn(name, turn)
 
     def deck_event(self, data: dict):
         """
@@ -97,8 +108,9 @@ class Event:
             amount = data["amount"]
             self.gui.gamewindow.gamedeck.set_amount(amount)
         if "latest" in data:
-            amount = data["amount"]
-            rank = data["rank"]
+            claim_data = data["latest"]
+            amount = claim_data["amount"]
+            rank = claim_data["rank"]
             self.gui.gamewindow.claim.new(amount, rank)
 
         if "turn" in data:

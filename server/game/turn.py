@@ -112,6 +112,7 @@ class TurnManager:
         Change turn to a specific player
         :param name: str
         """
+        self.all_can_play = False
         if name not in self.get_names():
             return
         while name != self.active_player.get_name():
@@ -140,3 +141,11 @@ class TurnManager:
         :return: bool
         """
         return self.all_can_play
+
+    def is_in_turn(self, player):
+        """
+        Return True if player by id is in turn
+        :param player: Player
+        :return: bool
+        """
+        return player == self.active_player

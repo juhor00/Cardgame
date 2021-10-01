@@ -141,20 +141,36 @@ class Event:
         - Opponents
         - Deck
         - Gamedeck
-        - Players' cards
+        - Claimed
+        - Turn
+        - Players' cards, turn
         """
         if self.in_lobby:
             return
+
+        # Opponents
         self.broadcast_opponent_data()
 
+        # Deck
         deck_amount = self.game.deck.get_amount()
         deck_data = {"deck": {"amount": deck_amount}}
         self.sendall(deck_data)
 
+        # Game deck
         gamedeck_amount = self.game.gamedeck.get_amount()
         gamedeck_data = {"game": {"amount": gamedeck_amount}}
         self.sendall(gamedeck_data)
 
+        # Claim data
+        claim_rank = self.game.gamedeck.get_last_rank()
+        claim_amount = self.game.gamedeck.get_last_amount()
+        claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank}}}
+        self.sendall(claim_data)
+
+        # Turn
+        self.broadcast_turn()
+
+        # Player data
         self.broadcast_player_data()
 
     def broadcast_opponent_data(self):
@@ -196,6 +212,22 @@ class Event:
             personal_data["game"] = {"turn": turn}
 
             self.send(client, personal_data)
+
+    def broadcast_turn(self):
+        """
+        Broadcast player names to all clients
+        """
+        player_data = []
+        for player in self.game.turnmanager.get_players():
+            user_id = player.get_id()
+            name = player.get_name()
+            turn = self.game.turnmanager.is_in_turn(player)
+            if self.game.turnmanager.is_first_round():
+                print("First round")
+                turn = True
+            player_data.append({"name": name, "id": user_id, "turn": turn})
+        self.sendall({"turnlist": player_data})
+
 
     def check_start(self):
         """

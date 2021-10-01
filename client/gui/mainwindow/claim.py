@@ -18,6 +18,9 @@ class Claim(Label):
         :param rank: str
         :return:
         """
+        if amount == 0:
+            self.reset()
+            return
         self.config(text=f"Last claimed: {rank} x{amount}")
 
     def reset(self):
