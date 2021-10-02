@@ -15,6 +15,7 @@ def new_thread(target, daemon=True, args=()):
     thread = threading.Thread(target=target, args=args, daemon=daemon)
     thread.start()
 
+
 def bind_event_data(widget, sequence, func, add=None):
     def _substitute(*args):
         e = lambda: None

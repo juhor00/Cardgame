@@ -14,31 +14,23 @@ class Event:
         self.gui = gui
         self.id = user_id
 
+        self.event_types = {
+            "lobby": lambda msg: self.lobby_event,
+            "turnlist": lambda msg: self.turnlist_event,
+            "deck": lambda msg: self.deck_event,
+            "game": lambda msg: self.game_event,
+            "opponents": lambda msg: self.opponent_event,
+            "player": lambda msg: self.player_event,
+            "claimgrid": lambda msg: self.claimgrid_event
+        }
+
     def new(self, message: dict):
         """
         Handle top level events
         :param message: dict
         """
-        if "lobby" in message:
-            self.lobby_event(message["lobby"])
-
-        if "turnlist" in message:
-            self.turnlist_event(message["turnlist"])
-
-        if "deck" in message:
-            self.deck_event(message["deck"])
-
-        if "game" in message:
-            self.game_event(message["game"])
-
-        if "opponents" in message:
-            self.opponent_event(message["opponents"])
-
-        if "player" in message:
-            self.player_event(message["player"])
-
-        if "claimgrid" in message:
-            self.claimgrid_event(message["claimgrid"])
+        for key in message:
+            self.event_types[key](message[key])
 
     def lobby_event(self, data: dict):
         """
@@ -121,7 +113,6 @@ class Event:
             else:
                 self.gui.gamewindow.play_cards.add_cards(cards)
 
-
     def opponent_event(self, data: dict):
         """
         Handle opponent events
@@ -177,5 +168,3 @@ class Event:
             self.gui.gamewindow.claimgrid.enable_buttons(data["allowed"])
         if "denied" in data:
             self.gui.gamewindow.claimgrid.disable_buttons(data["denied"])
-
-
