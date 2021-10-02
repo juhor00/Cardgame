@@ -4,7 +4,7 @@ import socket
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server = "192.168.0.178"
+        server = "176.72.177.14"
         port = 12345
         self.addr = (server, port)
         self.id = int(self.connect())

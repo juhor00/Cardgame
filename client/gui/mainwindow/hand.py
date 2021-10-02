@@ -4,7 +4,6 @@ except ImportError:
     from .card import OpenedCard, calculate_size
 from tkinter import *
 from PIL import Image, ImageTk, ImageOps
-from importlib_resources import files
 
 
 class Hand(Frame):
@@ -33,10 +32,7 @@ class Hand(Frame):
         """
         Add images to arrow buttons
         """
-        try:
-            image = Image.open("./assets/arrow.png")
-        except FileNotFoundError:
-            image = Image.open(files("gui.mainwindow.assets").joinpath("arrow.png"))
+        image = Image.open(f"gui/mainwindow/assets/arrow.png")
 
         right = image.resize((40, 40), Image.ANTIALIAS)
         left = ImageOps.mirror(right)
