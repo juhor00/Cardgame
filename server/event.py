@@ -146,7 +146,7 @@ class Event:
             return
         players = []
         for client in self.clients:
-            players.append({"id": client.get_id(), "name": client.get_name(), "ready": client.is_ready()})
+            players.append({"uid": client.get_id(), "name": client.get_name(), "ready": client.is_ready()})
         data = {"lobby": {"players": players, "start": self.check_start()}}
         self.sendall(data)
 
@@ -193,11 +193,11 @@ class Event:
         Send opponent data to each player
         """
         for client in self.clients:
-            player_id = client.id
+            player_id = client.uid
             opponents = []
 
             for opponent_client in self.clients:
-                if opponent_client.id != player_id:
+                if opponent_client.uid != player_id:
                     player = self.game.turnmanager.get_player(opponent_client.name)
                     amount = player.hand.get_amount()
                     opponents.append({"amount": amount, "name": player.get_name()})
@@ -222,13 +222,13 @@ class Event:
         """
         player_data = []
         for player in self.game.turnmanager.get_players():
-            user_id = player.get_id()
+            uid = player.get_id()
             name = player.get_name()
             turn = self.game.turnmanager.is_in_turn(player)
             if self.game.turnmanager.is_first_round():
                 print("First round")
                 turn = True
-            player_data.append({"name": name, "id": user_id, "turn": turn})
+            player_data.append({"name": name, "uid": uid, "turn": turn})
         self.sendall({"turnlist": player_data})
 
     def broadcast_pause(self):
@@ -238,10 +238,10 @@ class Event:
         """
         player_data = []
         for player in self.game.turnmanager.get_players():
-            user_id = player.get_id()
+            uid = player.get_id()
             name = player.get_name()
             turn = False
-            player_data.append({"name": name, "id": user_id, "turn": turn})
+            player_data.append({"name": name, "uid": uid, "turn": turn})
         self.sendall({"turnlist": player_data})
 
     def broadcast_played_cards(self):

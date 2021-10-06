@@ -41,7 +41,7 @@ class Interface:
     def get_player(self):
         """
         Get player by input
-        :return: int, id
+        :return: int, uid
         """
         while True:
             self.game.turnmanager.print()

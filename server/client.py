@@ -5,7 +5,7 @@ class Client:
     def __init__(self, socket, id):
         """
         :param socket: socket
-        :param id: id
+        :param id: uid
         """
 
         self.socket = socket

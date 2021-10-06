@@ -1,0 +1,19 @@
+status = {
+    // Lobby
+    "lobby": <bool>       // Is client in lobby
+    "lobby ready": [(<int> id, <bool> status), ...]
+
+    // Opponents
+    "opponents": [(<int> id, <str> name), ...]
+    "opponents amount": [(<int> id, <int> amount), ...]
+
+
+    "hand cards": [<str> card, ...]
+    "play cards": [<str> card, ...]
+    "turn": <int>       // id
+    "claim": (<int> amount, <int> rank)
+
+
+
+
+}
