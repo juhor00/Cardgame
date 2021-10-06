@@ -3,7 +3,7 @@ import json
 import threading
 
 
-from event import Event
+from event import EventHandler
 
 
 def new_thread(target, daemon=True, args=()):
@@ -23,7 +23,7 @@ class Server:
         self.id_count = 0
         print("Server is online")
         new_thread(self.receive, daemon=False)
-        self.event = Event(self)
+        self.event = EventHandler(self)
 
     def receive(self):
         """

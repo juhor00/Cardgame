@@ -4,12 +4,12 @@ import json
 try:
     from .gui.gui import Gui
     from .network import Network
-    from .event import Event
+    from .eventhandler import EventHandler
     from .status import Status
 except ImportError:
     from gui.gui import Gui
     from network import Network
-    from event import Event
+    from eventhandler import EventHandler
     from status import Status
 
 
@@ -42,7 +42,7 @@ class Client:
         self.send({"general": "connect"})
 
         self.status = Status(self.network.get_id())
-        self.event = Event(self)
+        self.event = EventHandler(self)
 
         new_thread(self.receive)
         self.set_binds()

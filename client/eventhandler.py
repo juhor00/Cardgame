@@ -1,7 +1,7 @@
 from client import Client
 
 
-class Event:
+class EventHandler:
 
     def __init__(self, client: Client):
         """
