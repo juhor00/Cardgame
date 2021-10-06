@@ -1,3 +1,34 @@
+def compare(a, b):
+    """
+    Return a if a!=b, else None
+    :param a:
+    :param b:
+    :return: type(a) or None
+    """
+    if type(a) == list:
+        if a != b:
+            return a-b
+    elif a != b:
+        return a
+    else:
+        return None
+
+
+def list_difference(a, b):
+    """
+    Return difference of lists as sets.
+    First set has elements that are in a but not in b.
+    Second set has elements that are in b but not in a.
+    Duplicates in lists are ignored as they convert to set.
+    :param a: list
+    :param b: list
+    :return: tuple of sets
+    """
+    a = set(a)
+    b = set(b)
+    return a-b, b-a
+
+
 class Status:
 
     def __init__(self, uid):
@@ -18,6 +49,38 @@ class Status:
         self.play_cards = []
         self.allowed_claims = []
         self.denied_claims = []
+
+    def compare(self, other: 'Status'):
+        """
+        Compares two Status instances and returns the difference as Change
+        Result values are defined by this instance
+        :param other: Status
+        :return: Change or None, None if uid does not match
+        """
+        if self.get_uid() != other.get_uid():
+            return None
+
+        change = Change()
+        self_vars = vars(self)
+        other_vars = vars(other)
+
+        for self_attr, other_attr in zip(self_vars, other_vars):
+            if self_attr == 'uid':
+                continue
+            self_val = self_vars[self_attr]
+            other_val = other_vars[other_attr]
+
+            if self_val is list:
+                add, remove = list_difference(self_val, other_val)
+                change.__setattr__(self_attr+'_add', add)
+                change.__setattr__(self_attr+'_remove', remove)
+
+            else:
+                res_val = compare(self_val, other_val)
+                if res_val is not None:
+                    change.__setattr__(self_attr, res_val)
+
+        return change
 
     def set_lobby_status(self, status):
         self.in_lobby = status
@@ -90,6 +153,14 @@ class Status:
     def get_denied_claims(self):
         return self.denied_claims
 
+
+class Change:
+
+    def __init__(self):
+        pass
+
+    def get_attributes(self):
+        return vars(self)
 
 class Opponent:
 
