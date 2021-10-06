@@ -42,6 +42,10 @@ class Gui(Tk):
         self.is_fullscreen = False
         self.set_binds()
 
+        self.update_types = {
+            "in_lobby": lambda value: self.render_lobby() if value else self.render_gamewindow()
+        }
+
     def update_status(self, status):
         """
         Update Gui status
@@ -52,7 +56,11 @@ class Gui(Tk):
         self.status = status
 
     def apply_changes(self, changes):
-        print("Changes:", changes.get_attributes())
+
+        attributes = changes.get_attributes()
+        for attribute in attributes:
+            value = attributes[attribute]
+            self.update_types[attribute](value)
 
     def set_turn(self, state):
         self.in_turn = state

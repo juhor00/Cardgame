@@ -51,7 +51,8 @@ class EventHandler:
                     self.client.status.set_opponent_status(uid, ready)
 
         if "start" in data:
-            self.client.status.set_lobby_status(False)
+            if data["start"]:
+                self.client.status.set_lobby_status(False)
 
     def turnlist_event(self, data: dict):
         """
