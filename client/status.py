@@ -38,7 +38,6 @@ class Status:
         self.uid = uid
 
         self.in_lobby = None
-        self.lobby_ready = []
         self.opponents = []
         self.deck_amount = None
         self.gamedeck_amount = None
@@ -52,15 +51,15 @@ class Status:
 
     def compare(self, other: 'Status'):
         """
-        Compares two Status instances and returns the difference as Change
+        Compares two Status instances and returns the difference as Changes
         Result values are defined by this instance
         :param other: Status
-        :return: Change or None, None if uid does not match
+        :return: Changes or None, None if uid does not match
         """
         if self.get_uid() != other.get_uid():
             return None
 
-        change = Change()
+        change = Changes()
         self_vars = vars(self)
         other_vars = vars(other)
 
@@ -70,15 +69,14 @@ class Status:
             self_val = self_vars[self_attr]
             other_val = other_vars[other_attr]
 
-            if self_val is list:
+            if type(self_val) is list:
                 add, remove = list_difference(self_val, other_val)
-                change.__setattr__(self_attr+'_add', add)
-                change.__setattr__(self_attr+'_remove', remove)
+                change.add_attribute(self_attr+'_add', add)
+                change.add_attribute(self_attr+'_remove', remove)
 
             else:
                 res_val = compare(self_val, other_val)
-                if res_val is not None:
-                    change.__setattr__(self_attr, res_val)
+                change.add_attribute(self_attr, res_val)
 
         return change
 
@@ -154,10 +152,22 @@ class Status:
         return self.denied_claims
 
 
-class Change:
+class Changes:
 
     def __init__(self):
         pass
+
+    def add_attribute(self, name, value):
+
+        if value is None:
+            return
+        if type(value) is set:
+            if not value:
+                return
+            else:
+                value = list(value)
+
+        self.__setattr__(name, value)
 
     def get_attributes(self):
         return vars(self)

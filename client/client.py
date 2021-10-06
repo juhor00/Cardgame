@@ -1,5 +1,6 @@
 import threading
 import json
+from copy import copy
 
 try:
     from .gui.gui import Gui
@@ -37,12 +38,12 @@ class Client:
 
     def __init__(self):
 
-        self.gui = Gui()
         self.network = Network()
         self.send({"general": "connect"})
 
         self.status = Status(self.network.get_id())
-        self.event = EventHandler(self)
+        self.eventhandler = EventHandler(self)
+        self.gui = Gui(copy(self.status))
 
         new_thread(self.receive)
         self.set_binds()
@@ -61,8 +62,7 @@ class Client:
         while True:
             try:
                 message = json.loads(self.network.get())
-                print(message)
-                self.event.new(message)
+                self.eventhandler.new(message)
             except json.JSONDecodeError as e:
                 print("Stop receiving:", e)
                 return
@@ -88,7 +88,7 @@ class Client:
     def on_lobby_ready(self, _):
         """
         Action when player is ready in lobby
-        :param _: event
+        :param _: eventhandler
         """
         nickname = self.gui.get_name()
         self.send({"lobby": {"ready": True,
@@ -98,14 +98,14 @@ class Client:
     def on_lobby_cancel(self, _):
         """
         Action when player cancels to not ready in lobby
-        :param _: event
+        :param _: eventhandler
         """
         self.send({"lobby": {"ready": False}})
 
     def on_claim(self, event):
         """
         Action when player claims played cards
-        :param event: contains event data
+        :param event: contains eventhandler data
         """
         rank = int(event.data["content"])
         cards = self.gui.gamewindow.play_cards.get_cards()
@@ -122,7 +122,7 @@ class Client:
     def on_suspect(self, _):
         """
         Action when player suspects
-        :param _: event
+        :param _: eventhandler
         """
         print("Send: suspect")
         self.send({"game": {"suspect": True}})
@@ -130,9 +130,12 @@ class Client:
     def on_deck(self, _):
         """
         Action when deck is clicked
-        :param _: event
+        :param _: eventhandler
         """
         print("Deck")
+
+    def update_gui(self):
+        self.gui.update_status(copy(self.status))
 
 
 if __name__ == '__main__':

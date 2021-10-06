@@ -109,7 +109,7 @@ class TurnManager:
 
     def turn_to(self, name):
         """
-        Change turn to a specific player
+        Changes turn to a specific player
         :param name: str
         """
         self.all_can_play = False

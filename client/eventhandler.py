@@ -1,23 +1,23 @@
-from client import Client
 
 
 class EventHandler:
 
-    def __init__(self, client: Client):
+    def __init__(self, client):
         """
         Handle GUI events
         :param client: Client
         """
         self.client = client
+        print("UID:", self.client.status.get_uid())
 
         self.event_types = {
-            "lobby": lambda msg: self.lobby_event,
-            "turnlist": lambda msg: self.turnlist_event,
-            "deck": lambda msg: self.deck_event,
-            "game": lambda msg: self.game_event,
-            "opponents": lambda msg: self.opponent_event,
-            "player": lambda msg: self.player_event,
-            "claimgrid": lambda msg: self.claimgrid_event
+            "lobby": lambda msg: self.lobby_event(msg),
+            "turnlist": lambda msg: self.turnlist_event(msg),
+            "deck": lambda msg: self.deck_event(msg),
+            "game": lambda msg: self.game_event(msg),
+            "opponents": lambda msg: self.opponent_event(msg),
+            "player": lambda msg: self.player_event(msg),
+            "claimgrid": lambda msg: self.claimgrid_event(msg)
         }
 
     def new(self, message: dict):
@@ -27,6 +27,8 @@ class EventHandler:
         """
         for key in message:
             self.event_types[key](message[key])
+
+        self.client.update_gui()
 
     def lobby_event(self, data: dict):
         """
@@ -43,8 +45,8 @@ class EventHandler:
                 uid = player["uid"]
                 name = player["name"]
                 ready = player["ready"]
-
                 if uid is not self.client.status.get_uid():
+
                     self.client.status.add_opponent(uid, name)
                     self.client.status.set_opponent_status(uid, ready)
 

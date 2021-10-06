@@ -3,7 +3,7 @@ import json
 import threading
 
 
-from event import EventHandler
+from eventhandler import EventHandler
 
 
 def new_thread(target, daemon=True, args=()):

@@ -25,9 +25,14 @@ class Gui(Tk):
     Graphical interface of client
     """
 
-    def __init__(self):
+    def __init__(self, status):
+        """
+        Initialize Gui
+        :param status:
+        """
         super().__init__()
 
+        self.status = status
         self.size = (1280, 720)
         self.minsize(1280, 720)
         self.gamewindow = GameWindow(self, self.size[0], self.size[1])
@@ -36,6 +41,18 @@ class Gui(Tk):
         self.in_turn = False
         self.is_fullscreen = False
         self.set_binds()
+
+    def update_status(self, status):
+        """
+        Update Gui status
+        :param status: Status
+        """
+        changes = status.compare(self.status)
+        self.apply_changes(changes)
+        self.status = status
+
+    def apply_changes(self, changes):
+        print("Changes:", changes.get_attributes())
 
     def set_turn(self, state):
         self.in_turn = state
@@ -90,9 +107,3 @@ class Gui(Tk):
             card = event.data["content"]
             self.gamewindow.play_cards.remove_card(card)
             self.gamewindow.hand.add_card(card)
-
-
-if __name__ == "__main__":
-    gui = Gui()
-    gui.lobby.bind("<<Ready>>", gui.render_gamewindow)
-    gui.mainloop()

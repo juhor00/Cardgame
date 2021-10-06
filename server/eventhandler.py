@@ -10,7 +10,7 @@ def new_thread(target, daemon=True, args=()):
     thread.start()
 
 
-class Event:
+class EventHandler:
 
     def __init__(self, server):
 
