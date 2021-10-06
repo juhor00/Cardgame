@@ -22,9 +22,9 @@ class TurnManager:
     @staticmethod
     def create_players_dict(players):
         """
-        Create a dictionary of players based on their id's
+        Create a dictionary of players based on their uid's
         :param players: list of Players
-        :return: dict, id : Player
+        :return: dict, uid : Player
         """
         players_by_id = {}
         for player in players:

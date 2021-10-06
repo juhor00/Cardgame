@@ -1,18 +1,14 @@
-try:
-    from .gui.gui import Gui
-except ImportError:
-    from gui.gui import Gui
+from client import Client
 
 
 class Event:
 
-    def __init__(self, gui: Gui, user_id: int):
+    def __init__(self, client: Client):
         """
         Handle GUI events
-        :param gui: Gui object
+        :param client: Client
         """
-        self.gui = gui
-        self.id = user_id
+        self.client = client
 
         self.event_types = {
             "lobby": lambda msg: self.lobby_event,
@@ -37,49 +33,29 @@ class Event:
         Handle lobby events
         :param data: dict
         """
+
+        # Lobby events are always in lobby
+        self.client.status.set_lobby_status(True)
+
         if "players" in data:
             players = data["players"]
-            self.gui.lobby.remove_all()
             for player in players:
-                user_id = player["id"]
+                uid = player["uid"]
                 name = player["name"]
                 ready = player["ready"]
 
-                if user_id is not self.id:
-                    self.gui.lobby.add_opponent(name, ready)
+                if uid is not self.client.status.get_uid():
+                    self.client.status.add_opponent(uid, name)
+                    self.client.status.set_opponent_status(uid, ready)
 
         if "start" in data:
-            if data["start"]:
-                self.gui.render_gamewindow()
-                opponents = self.gui.lobby.get_opponents()
-                for opponent in opponents:
-                    self.gui.gamewindow.opponents.add(opponent, 0)
+            self.client.status.set_lobby_status(False)
 
     def turnlist_event(self, data: dict):
         """
         Handle turnlist events
         :param data: dict
         """
-        # Create turnlist
-        if self.gui.gamewindow.turn.is_empty():
-            players = []
-            for player in data:
-                name = player["name"]
-                user_id = player["id"]
-                if user_id == self.id:
-                    name = "You"
-                players.append(name)
-            self.gui.gamewindow.turn.add_players(players)
-
-        # Update turnlist
-        for player in data:
-            name = player["name"]
-            user_id = player["id"]
-            turn = player["turn"]
-            if user_id == self.id:
-                name = "You"
-                self.gui.set_turn(turn)
-            self.gui.gamewindow.turn.set_turn(name, turn)
 
     def deck_event(self, data: dict):
         """
@@ -88,30 +64,25 @@ class Event:
         """
         if "amount" in data:
             amount = data["amount"]
-            self.gui.gamewindow.deck.set_amount(amount)
+            self.client.status.set_deck_amount(amount)
 
     def game_event(self, data: dict):
         """
         Handle game events
         :param data: dict
         """
-        self.gui.gamewindow.play_cards.empty()
-        self.gui.gamewindow.remove_play_cards()
         if "amount" in data:
             amount = data["amount"]
-            self.gui.gamewindow.gamedeck.set_amount(amount)
+            self.client.status.set_gamedeck_amount(amount)
         if "latest" in data:
             claim_data = data["latest"]
             amount = claim_data["amount"]
             rank = claim_data["rank"]
-            self.gui.gamewindow.claim.new(amount, rank)
+            self.client.status.set_claim(amount, rank)
 
         if "display" in data:
             cards = data["display"]
-            if len(cards) == 0:
-                self.gui.gamewindow.play_cards.empty()
-            else:
-                self.gui.gamewindow.play_cards.add_cards(cards)
+            self.client.status.set_display(cards)
 
     def opponent_event(self, data: dict):
         """
@@ -119,9 +90,9 @@ class Event:
         :param data: dict
         """
         for opponent in data:
-            name = opponent["name"]
+            uid = opponent["id"]
             amount = opponent["amount"]
-            self.gui.gamewindow.opponents.set_amount(name, amount)
+            self.client.status.set_opponent_amount(uid, amount)
 
     def player_event(self, data: dict):
         """
@@ -130,34 +101,7 @@ class Event:
         """
         if "cards" in data:
             cards = data["cards"]
-            cards_dict = {}
-            for card in cards:
-                if card not in cards_dict:
-                    cards_dict[card] = 1
-                else:
-                    cards_dict[card] += 1
-
-            hand = self.gui.gamewindow.hand.get_cards()
-            hand_dict = {}
-            for card in hand:
-                if card not in hand_dict:
-                    hand_dict[card] = 1
-                else:
-                    hand_dict[card] += 1
-
-            for card in cards:
-                # Card is missing
-                if card not in hand_dict:
-                    for _ in range(cards_dict[card]):
-                        self.gui.gamewindow.hand.add_card(card)
-                # Too many cards in hand
-                elif hand_dict[card] > cards_dict[card]:
-                    for _ in range(hand_dict[card] - cards_dict[card]):
-                        self.gui.gamewindow.hand.remove_card(card)
-                # Too few cards in hand
-                elif hand_dict[card] < cards_dict[card]:
-                    for _ in range(cards_dict[card] - hand_dict[card]):
-                        self.gui.gamewindow.hand.add_card(card)
+            self.client.status.set_hand_cards(cards)
 
     def claimgrid_event(self, data: dict):
         """
@@ -165,6 +109,8 @@ class Event:
         :param data: dict
         """
         if "allowed" in data:
-            self.gui.gamewindow.claimgrid.enable_buttons(data["allowed"])
+            allowed = data["allowed"]
+            self.client.status.set_allowed_claims(allowed)
         if "denied" in data:
-            self.gui.gamewindow.claimgrid.disable_buttons(data["denied"])
+            denied = data["denied"]
+            self.client.status.set_denied_claims(denied)

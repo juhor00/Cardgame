@@ -5,10 +5,12 @@ try:
     from .gui.gui import Gui
     from .network import Network
     from .event import Event
+    from .status import Status
 except ImportError:
     from gui.gui import Gui
     from network import Network
     from event import Event
+    from status import Status
 
 
 def new_thread(target, daemon=True, args=()):
@@ -34,12 +36,14 @@ class Client:
     """
 
     def __init__(self):
+
         self.gui = Gui()
         self.network = Network()
         self.send({"general": "connect"})
-        user_id = self.network.get_id()
-        print("ID:", user_id)
-        self.event = Event(self.gui, user_id)
+
+        self.status = Status(self.network.get_id())
+        self.event = Event(self)
+
         new_thread(self.receive)
         self.set_binds()
         self.gui.mainloop()
