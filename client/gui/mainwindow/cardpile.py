@@ -8,7 +8,7 @@ except ImportError:
 
 class CardPile(Frame):
 
-    def __init__(self, parent, uid, name=""):
+    def __init__(self, parent, name=""):
 
         # Card size
         width, height = calculate_size()
@@ -18,7 +18,6 @@ class CardPile(Frame):
 
         self.amount = 0
         self.name = name
-        self.uid = uid
 
         self.amount_label = Label(self, text=f"[{self.amount}]", font=("", 12), fg="white", bg="#35654d")
         self.name_label = Label(self, text=name, font=("", 12), fg="white", bg="#35654d")
@@ -70,9 +69,6 @@ class CardPile(Frame):
         """
         return self.name
 
-    def get_uid(self):
-        return self.uid
-
     def __str__(self):
         return self.get_name()
 
@@ -82,7 +78,7 @@ class InteractPile(CardPile):
     A card pile that can be interacted with
     """
     def __init__(self, parent, name=""):
-        super().__init__(parent, name=name, uid=0)
+        super().__init__(parent, name=name)
         self.update()
         width = self.winfo_reqwidth()
         height = self.winfo_reqheight()
@@ -163,7 +159,7 @@ class InteractPile(CardPile):
         self.elevated = True
         self.top.place(y=self.elevated_y, x=self.elevated_x)
 
-    def on_leave(self, event):
+    def on_leave(self, _):
         """
         Lowers the card when not hovered over anymore
         """
@@ -176,7 +172,7 @@ class InteractPile(CardPile):
         self.elevated = False
         self.top.place(y=self.normal_y, x=self.normal_x)
 
-    def on_click(self, event):
+    def on_click(self, _):
         """
         Generate event if click was allowed
         """

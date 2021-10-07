@@ -14,7 +14,7 @@ class Opponents(Frame):
         super().__init__(parent, width=1280, height=234, bg="#35654d")
         self.parent = parent
 
-        self.opponents = []
+        self.opponents = {}
 
     def add(self, uid, name, amount=0):
         """
@@ -23,20 +23,18 @@ class Opponents(Frame):
         :param name: str
         :param amount: int
         """
-        opponent = CardPile(self, name=name, uid=uid)
+        opponent = CardPile(self, name=name)
         opponent.set_amount(amount)
-        self.opponents.append(opponent)
+        self.opponents[uid] = opponent
         self.draw()
 
-    def remove_opponent(self, name):
+    def remove_opponent(self, uid):
         """
         Remove an opponent
-        :param name: str
+        :param uid: int
         """
-        for opponent in self.opponents:
-            if str(opponent) == name:
-                self.opponents.remove(opponent)
-                self.draw()
+        del self.opponents[uid]
+        self.draw()
 
     def set_amount(self, uid, amount):
         """
@@ -52,9 +50,7 @@ class Opponents(Frame):
         opponent.set_name(name)
 
     def get_opponent(self, uid):
-        for opponent in self.opponents:
-            if opponent.get_uid() == uid:
-                return opponent
+        return self.opponents[uid]
 
     def draw(self):
         """
@@ -63,11 +59,15 @@ class Opponents(Frame):
         if len(self.opponents) == 0:
             return
         self.update()
-        pile_width = self.opponents[0].winfo_reqwidth()
+
+        keys = list(self.opponents.keys())
+
+        pile_width = self.opponents[keys[0]].winfo_reqwidth()
         width = self.winfo_reqwidth()
         offset = 100
 
         first_coordinate = (width - (offset + pile_width) * (len(self.opponents) - 1) - pile_width) / 2
-        for index, opponent in enumerate(self.opponents):
+        for index, uid in enumerate(self.opponents):
+            opponent = self.opponents[uid]
             x = first_coordinate + (index * (offset + pile_width))
             opponent.place(x=x, y=0)
