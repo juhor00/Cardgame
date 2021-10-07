@@ -43,7 +43,10 @@ class Gui(Tk):
         self.set_binds()
 
         self.update_types = {
-            "in_lobby": lambda value: self.render_lobby() if value else self.render_gamewindow()
+            "in_lobby": lambda value: self.render_lobby() if value else self.render_gamewindow(),
+            "opponents_modify": lambda opponents: self.modify_opponents(opponents),
+            "opponents_add": lambda opponents: self.add_opponents(opponents),
+            "opponents_remove": lambda opponents: self.remove_opponents(opponents),
         }
 
     def update_status(self, status):
@@ -115,3 +118,15 @@ class Gui(Tk):
             card = event.data["content"]
             self.gamewindow.play_cards.remove_card(card)
             self.gamewindow.hand.add_card(card)
+
+    def modify_opponents(self, opponents):
+        for opponent in opponents:
+            print("Modify:", vars(opponent))
+
+    def add_opponents(self, opponents):
+        for opponent in opponents:
+            print("Add:", vars(opponent))
+
+    def remove_opponents(self, opponents):
+        for opponent in opponents:
+            print("Remove:", vars(opponent))

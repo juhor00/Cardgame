@@ -1,3 +1,5 @@
+from copy import copy
+
 def compare(a, b):
     """
     Return a if a!=b, else None
@@ -69,16 +71,69 @@ class Status:
             self_val = self_vars[self_attr]
             other_val = other_vars[other_attr]
 
+            # Lists
             if type(self_val) is list:
-                add, remove = list_difference(self_val, other_val)
-                change.add_attribute(self_attr+'_add', add)
-                change.add_attribute(self_attr+'_remove', remove)
+                # Claims
+                if self_attr in ["allowed claims", "denied claims"]:
+                    res_val = compare(self_val, other_val)
+                    change.add_attribute(self_attr, res_val)
 
+                # Opponents
+                elif self_attr == "opponents":
+                    modify, add, remove = self.compare_opponents(other_val)
+                    print("opponents", modify, add, remove)
+                    change.add_attribute(self_attr+'_modify', modify)
+                    change.add_attribute(self_attr+'_add', add)
+                    change.add_attribute(self_attr + '_remove', remove)
+
+                # Card lists
+                else:
+                    add, remove = list_difference(self_val, other_val)
+                    change.add_attribute(self_attr+'_add', add)
+                    change.add_attribute(self_attr+'_remove', remove)
+
+            # Other attributes
             else:
                 res_val = compare(self_val, other_val)
                 change.add_attribute(self_attr, res_val)
 
         return change
+
+    def compare_opponents(self, opponents):
+        """
+        Compares opponents and return list of opponents with changes
+        :param opponents: list of opponents
+        :return: list of opponents
+        """
+        modify = []
+        remove = []
+        add = []
+
+        for other_opponent in opponents:
+
+            uid = other_opponent.get_uid()
+            self_opponent = self.get_opponent(uid)
+
+            # Remove
+            if self_opponent is None:
+                remove.append(copy(other_opponent))
+                continue
+
+            # Modify
+            if not (self_opponent == other_opponent):
+                modify.append(copy(self_opponent))
+
+        # Add
+        for self_opponent in self.opponents:
+            uid = self_opponent.get_uid()
+            add.append(copy(self_opponent))
+            for other_opponent in opponents:
+                # Uid found in other opponents
+                if other_opponent.get_uid() == uid:
+                    add.remove(self_opponent)
+                    break
+
+        return modify, add, remove
 
     def set_lobby_status(self, status):
         self.in_lobby = status
@@ -90,13 +145,20 @@ class Status:
         return self.uid
 
     def add_opponent(self, uid, name):
-        opponent = Opponent(uid, name)
-        self.opponents.append(opponent)
+        opponent = self.get_opponent(uid)
+        if opponent is None:
+            opponent = Opponent(uid, name)
+            self.opponents.append(opponent)
+            print("Adding opponent", opponent, "to", self)
+            return
+        else:
+            opponent.set_name(name)
 
     def get_opponent(self, uid):
         for opponent in self.opponents:
             if opponent.get_uid() == uid:
                 return opponent
+        return None
 
     def set_opponent_status(self, uid, status):
         """
@@ -161,16 +223,19 @@ class Changes:
 
         if value is None:
             return
+
         if type(value) is set:
+            value = list(value)
+
+        if type(value) is list:
             if not value:
                 return
-            else:
-                value = list(value)
 
         self.__setattr__(name, value)
 
     def get_attributes(self):
         return vars(self)
+
 
 class Opponent:
 
@@ -179,6 +244,17 @@ class Opponent:
         self.name = name
         self.ready = None
         self.card_amount = 0
+
+    def __eq__(self, other: 'Opponent'):
+        if self.get_uid() != other.get_uid():
+            return False
+        if self.get_name() != other.get_name():
+            return False
+        if self.is_ready() != other.is_ready():
+            return False
+        if self.get_card_amount() != other.get_card_amount():
+            return False
+        return True
 
     def get_uid(self):
         return self.uid

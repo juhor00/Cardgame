@@ -1,6 +1,6 @@
 import threading
 import json
-from copy import copy
+from copy import deepcopy
 
 try:
     from .gui.gui import Gui
@@ -43,7 +43,7 @@ class Client:
 
         self.status = Status(self.network.get_id())
         self.eventhandler = EventHandler(self)
-        self.gui = Gui(copy(self.status))
+        self.gui = Gui(deepcopy(self.status))
 
         new_thread(self.receive)
         self.set_binds()
@@ -135,7 +135,7 @@ class Client:
         print("Deck")
 
     def update_gui(self):
-        self.gui.update_status(copy(self.status))
+        self.gui.update_status(deepcopy(self.status))
 
 
 if __name__ == '__main__':
