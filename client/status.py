@@ -158,6 +158,19 @@ class Status:
                 return opponent
         return None
 
+    def get_all_opponent_uids(self):
+        uids = []
+        for opponent in self.opponents:
+            uids.append(opponent.get_uid())
+        return uids
+
+    def get_opponents(self):
+        return self.opponents
+
+    def remove_opponent(self, uid):
+        opponent = self.get_opponent(uid)
+        self.opponents.remove(opponent)
+
     def set_opponent_status(self, uid, status):
         """
         Set lobby ready status
@@ -252,6 +265,9 @@ class Opponent:
         if self.get_card_amount() != other.get_card_amount():
             return False
         return True
+
+    def __str__(self):
+        return f"{self.get_uid()} {self.get_name()}"
 
     def get_uid(self):
         return self.uid

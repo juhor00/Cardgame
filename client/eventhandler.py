@@ -25,7 +25,6 @@ class EventHandler:
         Handle top level events
         :param message: dict
         """
-        print(message)
         for key in message:
             self.event_types[key](message[key])
 
@@ -41,15 +40,25 @@ class EventHandler:
         self.client.status.set_lobby_status(True)
 
         if "players" in data:
+
+            old_uids = set(self.client.status.get_all_opponent_uids())
+            old_uids.add(self.client.status.get_uid())
+
+            new_uids = set()
             players = data["players"]
             for player in players:
                 uid = player["uid"]
+                new_uids.add(uid)
                 name = player["name"]
                 ready = player["ready"]
                 if uid is not self.client.status.get_uid():
 
                     self.client.status.add_opponent(uid, name)
                     self.client.status.set_opponent_status(uid, ready)
+
+            remove_uids = old_uids - new_uids
+            for uid in remove_uids:
+                self.client.status.remove_opponent(uid)
 
         if "start" in data:
             if data["start"]:

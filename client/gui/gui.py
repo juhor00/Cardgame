@@ -66,6 +66,7 @@ class Gui(Tk):
         """
         changes = status.compare(self.status)
         self.status = status
+        print("Status:", vars(status))
         print("Changes:", vars(changes))
         self.apply_changes(changes)
 
@@ -132,19 +133,24 @@ class Gui(Tk):
             self.gamewindow.hand.add_card(card)
 
     def modify_opponents(self, opponents):
-        for opponent in opponents:
-            print("Modify:", vars(opponent))
+
+        if self.status.is_in_lobby():
+            for opponent in opponents:
+                self.lobby.modify_opponent(opponent.get_uid(), opponent.get_name(), opponent.is_ready())
 
     def add_opponents(self, opponents):
 
         if self.status.is_in_lobby():
             for opponent in opponents:
                 print("Add:", vars(opponent))
-                self.lobby.add_opponent(opponent.get_name(), opponent.is_ready(), opponent.get_uid())
+                self.lobby.add_opponent(opponent.get_uid(), opponent.get_name(), opponent.is_ready())
 
-    def remove_opponents(self, opponents):
-        for opponent in opponents:
-            print("Remove:", vars(opponent))
+    def remove_opponents(self, _):
+        """
+        Ignore opponents to remove and refresh all with current status info
+        :param _: opponents, ignored
+        """
+        self.lobby.remove_all_and_add_opponents(self.status.get_opponents())
 
     def add_display(self, cards):
         pass

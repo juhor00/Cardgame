@@ -33,9 +33,10 @@ class Lobby(Frame):
             self.readybutton.config(text="Ready", bg="green")
             self.event_generate("<<Cancel>>")
 
-    def add_opponent(self, name, ready, uid):
+    def add_opponent(self, uid, name, ready):
         """
         Adds a new opponent
+        :param uid: int
         :param name: str
         :param ready: bool
         """
@@ -46,16 +47,32 @@ class Lobby(Frame):
         opponent.update()
         self.opponents.append(opponent)
 
-    def get_opponents(self):
+    def modify_opponent(self, uid, name, ready):
         """
-        Return list of opponents
-        :return: [str]
+        Modify existing opponent's status
+        :param uid: int
+        :param name: str
+        :param ready: bool
         """
-        opponents = []
-        for player in self.opponents:
-            name = player.get_name()
-            opponents.append(name)
-        return opponents
+        opponent = self.get_opponent_by_uid(uid)
+        opponent.set_name(name)
+        opponent.set_ready(ready)
+
+    def remove_all_and_add_opponents(self, opponents):
+        self.remove_all()
+        for opponent in opponents:
+            self.add_opponent(opponent.get_uid(), opponents.get_name(), opponent.is_ready())
+
+
+    def get_opponent_by_uid(self, uid):
+        """
+        Return opponent widget by uid
+        :param uid: int
+        :return: lobby.Opponent
+        """
+        for opponent in self.opponents:
+            if opponent.get_uid() == uid:
+                return opponent
 
     def remove_all(self):
         for opponent in self.opponents:
@@ -83,10 +100,17 @@ class Opponent(Frame):
     def get_uid(self):
         return self.uid
 
-    def get_name(self):
+    def set_name(self, name):
         """
-        Return name
-        :return: str
+        Change name
+        :param name: str
         """
-        return self.name
+        self.label.config(text=name)
+
+    def set_ready(self, ready):
+        """
+        Set ready or not
+        :param ready: bool
+        """
+        self.image.config(bg="green" if ready else "red")
 
