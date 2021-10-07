@@ -211,8 +211,7 @@ class EventHandler:
         Broadcast personal data to each player
         """
         for client in self.clients:
-            name = client.name
-            player = self.game.turnmanager.get_player(name)
+            player = self.game.turnmanager.get_player(client.get_uid())
             cards = player.hand.get_cards()
             player_data = {"player": {"cards": cards}}
             self.send(client, player_data)
