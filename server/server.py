@@ -66,6 +66,5 @@ class Server:
         client.send(json.dumps(data).encode("UTF-8"))
 
 
-
 if __name__ == '__main__':
     server = Server()

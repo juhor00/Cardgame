@@ -1,5 +1,4 @@
 import game.deck as deck
-from game.card import Card
 
 
 class Player:
@@ -16,10 +15,10 @@ class Player:
         self.hand = deck.Deck()
 
     def __str__(self):
-        return self.name
+        return f"{self.get_uid()} {self.get_name()}"
 
     def get_name(self):
-        return str(self)
+        return self.name
 
     def get_uid(self):
         return self.uid

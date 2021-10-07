@@ -56,7 +56,8 @@ class Gui(Tk):
             "play_cards_add": lambda cards: self.gamewindow.play_cards.add_cards(cards),
             "play_cards_remove": lambda cards: self.gamewindow.play_cards.remove_cards(cards),
             "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
-            "denid_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
+            "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
+            "turn": lambda value: None
         }
 
     def update_status(self, status):
@@ -77,9 +78,6 @@ class Gui(Tk):
             value = attributes[attribute]
             print(attribute, value)
             self.update_types[attribute](value)
-
-    def set_turn(self, state):
-        self.in_turn = state
 
     def render_gamewindow(self):
         """
@@ -114,23 +112,23 @@ class Gui(Tk):
         """
         Set GUI action binds
         """
-        self.bind("f", self.set_fullscreen)
+        self.bind("<F11>", self.set_fullscreen)
         self.bind("<Escape>", lambda event: self.destroy())
 
         bind_event_data(self.gamewindow.hand, "<<Card-clicked>>", self.on_hand_click)
         bind_event_data(self.gamewindow.play_cards, "<<Card-clicked>>", self.on_play_click)
 
     def on_hand_click(self, event):
-        if self.in_turn:
+        if self.status.get_turn():
             card = event.data["content"]
-            self.gamewindow.hand.remove_card(card)
-            self.gamewindow.play_cards.add_card(card)
+            self.gamewindow.hand.remove_cards([card])
+            self.gamewindow.play_cards.add_cards([card])
 
     def on_play_click(self, event):
-        if self.in_turn:
+        if self.status.get_turn():
             card = event.data["content"]
-            self.gamewindow.play_cards.remove_card(card)
-            self.gamewindow.hand.add_card(card)
+            self.gamewindow.play_cards.remove_cards([card])
+            self.gamewindow.hand.add_cards([card])
 
     def modify_opponents(self, opponents):
 

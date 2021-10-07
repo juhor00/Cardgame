@@ -112,7 +112,7 @@ class Client:
         self.gui.gamewindow.play_cards.empty()
         self.gui.gamewindow.remove_play_cards()
 
-        if self.gui.in_turn:
+        if self.status.get_turn():
             print("Send: claim", rank, cards)
             data = {"game": {"played": cards, "claimed": rank}}
             self.send(data)

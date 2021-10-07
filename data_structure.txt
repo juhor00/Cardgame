@@ -60,8 +60,7 @@ FROM SERVER
 "turnlist":
     [
         {
-        "name":    (str) <name>
-        "id":      (int) <id>
+        "uid":      (int) <uid>
         "turn":    (bool) <state>
         }
     ]

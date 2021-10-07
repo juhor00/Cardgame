@@ -223,12 +223,10 @@ class EventHandler:
         player_data = []
         for player in self.game.turnmanager.get_players():
             uid = player.get_uid()
-            name = player.get_name()
             turn = self.game.turnmanager.is_in_turn(player)
             if self.game.turnmanager.is_first_round():
-                print("First round")
                 turn = True
-            player_data.append({"name": name, "uid": uid, "turn": turn})
+            player_data.append({"uid": uid, "turn": turn})
         self.sendall({"turnlist": player_data})
 
     def broadcast_pause(self):
@@ -239,9 +237,8 @@ class EventHandler:
         player_data = []
         for player in self.game.turnmanager.get_players():
             uid = player.get_uid()
-            name = player.get_name()
             turn = False
-            player_data.append({"name": name, "uid": uid, "turn": turn})
+            player_data.append({"uid": uid, "turn": turn})
         self.sendall({"turnlist": player_data})
 
     def broadcast_played_cards(self):
@@ -290,7 +287,7 @@ class EventHandler:
         :param client: Client
         :return: Player
         """
-        return self.game.turnmanager.get_player(client.get_name())
+        return self.game.turnmanager.get_player(client.get_uid())
 
     def wait_for_discard(self, wait=5):
         """

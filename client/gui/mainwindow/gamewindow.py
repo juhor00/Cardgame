@@ -41,28 +41,6 @@ class GameWindow(Frame):
         self.place_widgets()
         self.remove_play_cards()
 
-    def test_values(self):
-        """
-        Set test values
-        NOT TO BE USED IN GAME
-        """
-        self.hand.add_cards(["2C", "10D", "AH", "QS", "7C", "7D", "9H", "KS", "2S", "3D", "4D", "9S"])
-        self.deck.set_amount(40)
-        self.gamedeck.set_amount(3)
-
-        self.turn.add_players(["Homo", "Petteri", "Juuso", "Saatana", "You"])
-        self.turn.set_turn("Homo")
-
-        self.opponents.add("Homo", 4)
-        self.opponents.add("Petteri", 5)
-        self.opponents.add("Juuso", 10)
-        self.opponents.add("Saatana", 4)
-
-        self.play_cards.add_cards(["2C", "10D", "AH", "QS", "7C", "7D", "9H", "KS", "2S", "3D", "4D", "9S"])
-        self.place_play_cards()
-
-        self.claim.new(10, "2")
-
     def place_widgets(self):
         """
         Places widgets on frame

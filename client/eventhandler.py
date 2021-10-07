@@ -69,6 +69,13 @@ class EventHandler:
         Handle turnlist events
         :param data: dict
         """
+        for player in data:
+            uid = player["uid"]
+            turn = player["turn"]
+            if uid == self.client.status.get_uid():
+                self.client.status.set_turn(turn)
+            else:
+                self.client.status.set_opponent_turn(uid, turn)
 
     def deck_event(self, data: dict):
         """
@@ -96,6 +103,10 @@ class EventHandler:
         if "display" in data:
             cards = data["display"]
             self.client.status.set_display(cards)
+
+        if "turn" in data:
+            turn = data["turn"]
+            self.client.status.set_turn(turn)
 
     def opponent_event(self, data: dict):
         """

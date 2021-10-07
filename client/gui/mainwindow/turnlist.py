@@ -36,14 +36,14 @@ class TurnList(Frame):
             if type(widget) == Player:
                 widget.config(width=max_len)
 
-    def set_turn(self, name, turn):
+    def set_turn(self, uid, turn):
         """
         Mark player active
-        :param name: str
+        :param uid: int
         :param turn: bool, in turn
         """
         for player in self.players:
-            if str(player) == name:
+            if player.get_uid() == uid:
                 if turn:
                     player.set_active()
                 else:
@@ -55,26 +55,24 @@ class TurnList(Frame):
 
 class Player(Frame):
 
-    def __init__(self, master, name):
+    def __init__(self, master, name, uid):
         super().__init__(master)
         self.name_label = Label(self, text=name, font=("Helvetica", 24))
         self.name_label.pack(fill="both")
         self.name = name
+        self.uid = uid
 
     def __str__(self):
         return self.name
+
+    def get_name(self):
+        return self.name
+
+    def get_uid(self):
+        return self.uid
 
     def set_active(self):
         self.name_label.config(bg="#39B526")
 
     def set_inactive(self):
         self.name_label.config(bg="#B7B7B7")
-
-
-if __name__ == "__main__":
-    root = Tk()
-    turnlist = TurnList(root)
-    turnlist.pack()
-    turnlist.add_players(["Perkele", "Saatana", "You"])
-    turnlist.set_turn("Saatana")
-    root.mainloop()

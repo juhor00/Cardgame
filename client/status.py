@@ -50,6 +50,7 @@ class Status:
         self.play_cards = []
         self.allowed_claims = []
         self.denied_claims = []
+        self.turn = None
 
     def compare(self, other: 'Status'):
         """
@@ -184,6 +185,10 @@ class Status:
         opponent = self.get_opponent(uid)
         opponent.set_card_amount(amount)
 
+    def set_opponent_turn(self, uid, turn):
+        opponent = self.get_opponent(uid)
+        opponent.set_turn(turn)
+
     def set_deck_amount(self, amount):
         self.deck_amount = amount
 
@@ -223,6 +228,12 @@ class Status:
     def get_denied_claims(self):
         return self.denied_claims
 
+    def set_turn(self, turn):
+        self.turn = turn
+
+    def get_turn(self):
+        return self.turn
+
 
 class Changes:
 
@@ -254,6 +265,7 @@ class Opponent:
         self.name = name
         self.ready = None
         self.card_amount = 0
+        self.turn = None
 
     def __eq__(self, other: 'Opponent'):
         if self.get_uid() != other.get_uid():
@@ -289,3 +301,9 @@ class Opponent:
 
     def get_card_amount(self):
         return self.card_amount
+
+    def set_turn(self, turn):
+        self.turn = turn
+
+    def is_in_turn(self):
+        return self.turn
