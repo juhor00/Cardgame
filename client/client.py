@@ -41,7 +41,7 @@ class Client:
         self.network = Network()
         self.send({"general": "connect"})
 
-        self.status = Status(self.network.get_id())
+        self.status = Status(self.network.get_uid())
         self.eventhandler = EventHandler(self)
         self.gui = Gui(deepcopy(self.status))
 

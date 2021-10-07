@@ -12,7 +12,7 @@ class Network:
 
         self.pending = []
 
-    def get_id(self):
+    def get_uid(self):
         return self.id
 
     def is_connected(self):

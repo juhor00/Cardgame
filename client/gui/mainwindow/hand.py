@@ -61,7 +61,6 @@ class Hand(Frame):
         card.config(command=lambda: self.on_click(card))
         card.bind("<MouseWheel>", self.on_scroll)
         self.cards.append(card)
-        self.draw()
         if len(self.cards) == 1:
             self.lift()
 
@@ -72,6 +71,7 @@ class Hand(Frame):
         """
         for card in cards:
             self.add_card(card)
+        self.draw()
 
     def remove_card(self, to_remove):
         """
@@ -87,7 +87,6 @@ class Hand(Frame):
                     if self.skip < 0:
                         self.skip = 0
                 break
-        self.draw()
         if len(self.cards) == 0:
             self.lower()
 
@@ -98,6 +97,7 @@ class Hand(Frame):
         """
         for card in cards:
             self.remove_card(card)
+        self.draw()
 
     def get_cards(self):
         """

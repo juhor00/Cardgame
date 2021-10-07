@@ -2,15 +2,15 @@ class Client:
     """
     Connected client
     """
-    def __init__(self, socket, id):
+    def __init__(self, socket, uid):
         """
         :param socket: socket
-        :param id: uid
+        :param uid: uid
         """
 
         self.socket = socket
-        self.id = id
-        self.name = f"Player {id}"
+        self.uid = uid
+        self.name = f"Player {uid}"
         self.ready = False
         self.in_game = False
 
@@ -29,8 +29,8 @@ class Client:
     def get_socket(self):
         return self.socket
 
-    def get_id(self):
-        return self.id
+    def get_uid(self):
+        return self.uid
 
     def get_name(self):
         return self.name

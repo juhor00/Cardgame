@@ -20,13 +20,13 @@ class EventHandler:
 
         self.clients = []
 
-    def add(self, socket, client_id):
+    def add(self, socket, uid):
         """
         Add a client and broadcast it to others
         :param socket: socket
-        :param client_id: int
+        :param uid: int
         """
-        client = Client(socket, client_id)
+        client = Client(socket, uid)
         self.clients.append(client)
 
     def remove(self, socket):
@@ -146,7 +146,7 @@ class EventHandler:
             return
         players = []
         for client in self.clients:
-            players.append({"uid": client.get_id(), "name": client.get_name(), "ready": client.is_ready()})
+            players.append({"uid": client.get_uid(), "name": client.get_name(), "ready": client.is_ready()})
         data = {"lobby": {"players": players, "start": self.check_start()}}
         self.sendall(data)
 
@@ -193,14 +193,15 @@ class EventHandler:
         Send opponent data to each player
         """
         for client in self.clients:
-            player_id = client.uid
+            uid = client.get_uid()
             opponents = []
 
             for opponent_client in self.clients:
-                if opponent_client.uid != player_id:
-                    player = self.game.turnmanager.get_player(opponent_client.name)
+                opponent_uid = opponent_client.get_uid()
+                if opponent_uid != uid:
+                    player = self.game.turnmanager.get_player(opponent_uid)
                     amount = player.hand.get_amount()
-                    opponents.append({"amount": amount, "name": player.get_name()})
+                    opponents.append({"amount": amount, "name": player.get_name(), "uid": opponent_uid})
 
             opponent_data = {"opponents": opponents}
             self.send(client, opponent_data)
@@ -222,7 +223,7 @@ class EventHandler:
         """
         player_data = []
         for player in self.game.turnmanager.get_players():
-            uid = player.get_id()
+            uid = player.get_uid()
             name = player.get_name()
             turn = self.game.turnmanager.is_in_turn(player)
             if self.game.turnmanager.is_first_round():
@@ -238,7 +239,7 @@ class EventHandler:
         """
         player_data = []
         for player in self.game.turnmanager.get_players():
-            uid = player.get_id()
+            uid = player.get_uid()
             name = player.get_name()
             turn = False
             player_data.append({"name": name, "uid": uid, "turn": turn})
@@ -279,7 +280,7 @@ class EventHandler:
         players = []
         for client in self.clients:
             client.play()
-            players.append((client.get_id(), client.get_name()))
+            players.append((client.get_uid(), client.get_name()))
         self.game = Game(players)
         self.game.start()
         self.broadcast_game()

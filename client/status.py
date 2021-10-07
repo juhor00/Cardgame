@@ -1,5 +1,6 @@
 from copy import copy
 
+
 def compare(a, b):
     """
     Return a if a!=b, else None
@@ -43,8 +44,7 @@ class Status:
         self.opponents = []
         self.deck_amount = None
         self.gamedeck_amount = None
-        self.claim_rank = None
-        self.claim_amount = None
+        self.claim = None
         self.display = []
         self.hand_cards = []
         self.play_cards = []
@@ -81,7 +81,6 @@ class Status:
                 # Opponents
                 elif self_attr == "opponents":
                     modify, add, remove = self.compare_opponents(other_val)
-                    print("opponents", modify, add, remove)
                     change.add_attribute(self_attr+'_modify', modify)
                     change.add_attribute(self_attr+'_add', add)
                     change.add_attribute(self_attr + '_remove', remove)
@@ -149,7 +148,6 @@ class Status:
         if opponent is None:
             opponent = Opponent(uid, name)
             self.opponents.append(opponent)
-            print("Adding opponent", opponent, "to", self)
             return
         else:
             opponent.set_name(name)
@@ -186,8 +184,7 @@ class Status:
         return self.gamedeck_amount
 
     def set_claim(self, amount, rank):
-        self.claim_rank = rank
-        self.claim_amount = amount
+        self.claim = (amount, rank)
 
     def set_display(self, cards):
         self.display = cards

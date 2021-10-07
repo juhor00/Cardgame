@@ -21,7 +21,7 @@ class Player:
     def get_name(self):
         return str(self)
 
-    def get_id(self):
+    def get_uid(self):
         return self.id
 
     def print(self):

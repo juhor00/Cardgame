@@ -33,7 +33,7 @@ class Lobby(Frame):
             self.readybutton.config(text="Ready", bg="green")
             self.event_generate("<<Cancel>>")
 
-    def add_opponent(self, name, ready):
+    def add_opponent(self, name, ready, uid):
         """
         Adds a new opponent
         :param name: str
@@ -41,7 +41,7 @@ class Lobby(Frame):
         """
         self.update()
         height = self.others.winfo_height() / 5 - 30
-        opponent = Opponent(self.others, height, name, ready)
+        opponent = Opponent(self.others, height, name, ready, uid)
         opponent.place(x=0, y=(height+30)*len(self.opponents))
         opponent.update()
         self.opponents.append(opponent)
@@ -67,7 +67,7 @@ class Lobby(Frame):
 
 
 class Opponent(Frame):
-    def __init__(self, master: Frame, height: int, name: str, ready: bool):
+    def __init__(self, master: Frame, height: int, name: str, ready: bool, uid: int):
         super().__init__(master)
         self.name = name
         master.update()
@@ -78,6 +78,10 @@ class Opponent(Frame):
         self.label.update()
         self.image = Label(self, bg="green" if ready else "red")
         self.image.place(x=self.label.winfo_width()+30, y=0, width=height, height=height)
+        self.uid = uid
+
+    def get_uid(self):
+        return self.uid
 
     def get_name(self):
         """

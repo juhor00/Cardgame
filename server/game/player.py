@@ -4,15 +4,15 @@ from game.card import Card
 
 class Player:
 
-    def __init__(self, name, player_id):
+    def __init__(self, name, uid):
         """
         Create a player
         :param name: str
-        :param player_id: int
+        :param uid: int
         """
 
         self.name = name
-        self.id = player_id
+        self.uid = uid
         self.hand = deck.Deck()
 
     def __str__(self):
@@ -21,8 +21,8 @@ class Player:
     def get_name(self):
         return str(self)
 
-    def get_id(self):
-        return self.id
+    def get_uid(self):
+        return self.uid
 
     def print(self):
         print(self)

@@ -28,7 +28,7 @@ class TurnManager:
         """
         players_by_id = {}
         for player in players:
-            player_id = player.get_id()
+            player_id = player.get_uid()
             players_by_id[player_id] = player
         return players_by_id
 
@@ -104,7 +104,7 @@ class TurnManager:
         Removes the active player
         """
         self.turnlist.remove(self.active_player)
-        player_id = self.active_player.get_id()
+        player_id = self.active_player.get_uid()
         del(self.players[player_id])
         self.allowed_to_change = True
 

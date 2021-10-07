@@ -26,8 +26,8 @@ class TurnManager:
         """
         players_by_id = {}
         for player in players:
-            player_id = player.get_id()
-            players_by_id[player_id] = player
+            uid = player.get_uid()
+            players_by_id[uid] = player
         return players_by_id
 
     def stay_next_turn(self):
@@ -62,8 +62,8 @@ class TurnManager:
         :return: list, Player
         """
         players = []
-        for player_id in self.players:
-            players.append(self.players[player_id])
+        for uid in self.players:
+            players.append(self.players[uid])
 
         return players
 
@@ -80,16 +80,16 @@ class TurnManager:
 
         return sorted(names)
 
-    def get_player(self, name):
+    def get_player(self, uid):
         """
-        Get player by name
-        :param name: Player
+        Get player by uid
+        :param uid: int
+        :return: Player
         """
-        for player_id in self.players:
-            player = self.players[player_id]
-            if player.get_name() == name:
-                return player
-        return None
+        if uid in self.players:
+            return self.players[uid]
+        else:
+            return None
 
     def get_active_player(self):
         """
@@ -103,7 +103,7 @@ class TurnManager:
         Removes the active player
         """
         self.turnlist.remove(self.active_player)
-        player_id = self.active_player.get_id()
+        player_id = self.active_player.get_uid()
         del(self.players[player_id])
         self.allowed_to_change = True
 

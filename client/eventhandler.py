@@ -25,6 +25,7 @@ class EventHandler:
         Handle top level events
         :param message: dict
         """
+        print(message)
         for key in message:
             self.event_types[key](message[key])
 
@@ -93,7 +94,8 @@ class EventHandler:
         :param data: dict
         """
         for opponent in data:
-            uid = opponent["id"]
+            print(opponent)
+            uid = opponent["uid"]
             amount = opponent["amount"]
             self.client.status.set_opponent_amount(uid, amount)
 

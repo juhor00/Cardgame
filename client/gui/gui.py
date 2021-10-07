@@ -38,7 +38,6 @@ class Gui(Tk):
         self.gamewindow = GameWindow(self, self.size[0], self.size[1])
         self.lobby = Lobby(self, self.size[0], self.size[1])
         self.render_lobby()
-        self.in_turn = False
         self.is_fullscreen = False
         self.set_binds()
 
@@ -47,6 +46,17 @@ class Gui(Tk):
             "opponents_modify": lambda opponents: self.modify_opponents(opponents),
             "opponents_add": lambda opponents: self.add_opponents(opponents),
             "opponents_remove": lambda opponents: self.remove_opponents(opponents),
+            "deck_amount": lambda value: self.gamewindow.deck.set_amount(value),
+            "gamedeck_amount": lambda value: self.gamewindow.gamedeck.set_amount(value),
+            "claim": lambda claim: self.gamewindow.claim.new(claim[0], claim[1]),
+            "display_add": lambda cards: self.add_display(cards),
+            "display_remove": lambda cards: self.remove_display(cards),
+            "hand_cards_add": lambda cards: self.gamewindow.hand.add_cards(cards),
+            "hand_cards_remove": lambda cards: self.gamewindow.hand.remove_cards(cards),
+            "play_cards_add": lambda cards: self.gamewindow.play_cards.add_cards(cards),
+            "play_cards_remove": lambda cards: self.gamewindow.play_cards.remove_cards(cards),
+            "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
+            "denid_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
         }
 
     def update_status(self, status):
@@ -55,14 +65,16 @@ class Gui(Tk):
         :param status: Status
         """
         changes = status.compare(self.status)
-        self.apply_changes(changes)
         self.status = status
+        print("Changes:", vars(changes))
+        self.apply_changes(changes)
 
     def apply_changes(self, changes):
 
         attributes = changes.get_attributes()
         for attribute in attributes:
             value = attributes[attribute]
+            print(attribute, value)
             self.update_types[attribute](value)
 
     def set_turn(self, state):
@@ -124,9 +136,18 @@ class Gui(Tk):
             print("Modify:", vars(opponent))
 
     def add_opponents(self, opponents):
-        for opponent in opponents:
-            print("Add:", vars(opponent))
+
+        if self.status.is_in_lobby():
+            for opponent in opponents:
+                print("Add:", vars(opponent))
+                self.lobby.add_opponent(opponent.get_name(), opponent.is_ready(), opponent.get_uid())
 
     def remove_opponents(self, opponents):
         for opponent in opponents:
             print("Remove:", vars(opponent))
+
+    def add_display(self, cards):
+        pass
+
+    def remove_display(self, cards):
+        pass
