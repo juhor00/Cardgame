@@ -61,7 +61,7 @@ class Lobby(Frame):
     def remove_all_and_add_opponents(self, opponents):
         self.remove_all()
         for opponent in opponents:
-            self.add_opponent(opponent.get_uid(), opponents.get_name(), opponent.is_ready())
+            self.add_opponent(opponent.get_uid(), opponent.get_name(), opponent.is_ready())
 
 
     def get_opponent_by_uid(self, uid):
