@@ -10,7 +10,7 @@ class Client:
 
         self.socket = socket
         self.uid = uid
-        self.name = f"Player {uid}"
+        self.name = f"Waiting for player..."
         self.ready = False
         self.in_game = False
 

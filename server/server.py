@@ -52,7 +52,6 @@ class Server:
                 user = self.event.remove(client)
                 client.close()
                 print(f"{user} [{user.get_uid()}] disconnected!")
-                self.id_count -= 1
                 self.event.broadcast_lobby()
                 self.event.broadcast_game()
                 return
