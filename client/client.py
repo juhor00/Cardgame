@@ -108,7 +108,7 @@ class Client:
         :param event: contains eventhandler data
         """
         rank = int(event.data["content"])
-        cards = self.gui.gamewindow.play_cards.get_cards()
+        cards = self.gui.status.get_play_cards()
         self.gui.gamewindow.play_cards.empty()
         self.gui.gamewindow.remove_play_cards()
 

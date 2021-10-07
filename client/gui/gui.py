@@ -40,6 +40,7 @@ class Gui(Tk):
         self.render_lobby()
         self.is_fullscreen = False
         self.set_binds()
+        self.gamewindow.turn.add(self.status.get_uid(), "You", self.status.get_turn())
 
         self.update_types = {
             "in_lobby": lambda value: self.render_lobby() if value else self.render_gamewindow(),
@@ -67,8 +68,7 @@ class Gui(Tk):
         """
         changes = status.compare(self.status)
         self.status = status
-        print("Status:", vars(status))
-        print("Changes:", vars(changes))
+        print(vars(changes))
         self.apply_changes(changes)
 
     def apply_changes(self, changes):
@@ -76,7 +76,6 @@ class Gui(Tk):
         attributes = changes.get_attributes()
         for attribute in attributes:
             value = attributes[attribute]
-            print(attribute, value)
             self.update_types[attribute](value)
 
     def render_gamewindow(self):
@@ -123,35 +122,60 @@ class Gui(Tk):
             card = event.data["content"]
             self.gamewindow.hand.remove_cards([card])
             self.gamewindow.play_cards.add_cards([card])
+            self.update_card_status()
 
     def on_play_click(self, event):
         if self.status.get_turn():
             card = event.data["content"]
             self.gamewindow.play_cards.remove_cards([card])
             self.gamewindow.hand.add_cards([card])
+            self.update_card_status()
 
     def modify_opponents(self, opponents):
 
         if self.status.is_in_lobby():
             for opponent in opponents:
                 self.lobby.modify_opponent(opponent.get_uid(), opponent.get_name(), opponent.is_ready())
+        else:
+            for opponent in opponents:
+                uid = opponent.get_uid()
+                amount = opponent.get_card_amount()
+                turn = opponent.is_in_turn()
+                name = opponent.get_name()
+
+                self.gamewindow.modify_opponent(uid, turn, amount, name)
 
     def add_opponents(self, opponents):
 
-        if self.status.is_in_lobby():
-            for opponent in opponents:
-                print("Add:", vars(opponent))
-                self.lobby.add_opponent(opponent.get_uid(), opponent.get_name(), opponent.is_ready())
+        for opponent in opponents:
+            uid = opponent.get_uid()
+            name = opponent.get_name()
+            ready = opponent.is_ready()
+            amount = opponent.get_card_amount()
+            turn = opponent.is_in_turn()
+            self.lobby.add_opponent(uid, name, ready)
+
+            if uid == self.status.uid:
+                name = "You"
+            self.gamewindow.add_opponent(uid, name, amount, turn)
 
     def remove_opponents(self, _):
         """
         Ignore opponents to remove and refresh all with current status info
         :param _: opponents, ignored
         """
-        self.lobby.remove_all_and_add_opponents(self.status.get_opponents())
+        if self.status.is_in_lobby():
+            self.lobby.remove_all_and_add_opponents(self.status.get_opponents())
 
     def add_display(self, cards):
         pass
 
     def remove_display(self, cards):
         pass
+
+    def update_card_status(self):
+        hand_cards = self.gamewindow.hand.get_cards()
+        play_cards = self.gamewindow.play_cards.get_cards()
+
+        self.status.set_hand_cards(hand_cards)
+        self.status.set_play_cards(play_cards)

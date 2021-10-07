@@ -8,7 +8,7 @@ except ImportError:
 
 class CardPile(Frame):
 
-    def __init__(self, parent, name=""):
+    def __init__(self, parent, uid, name=""):
 
         # Card size
         width, height = calculate_size()
@@ -18,6 +18,7 @@ class CardPile(Frame):
 
         self.amount = 0
         self.name = name
+        self.uid = uid
 
         self.amount_label = Label(self, text=f"[{self.amount}]", font=("", 12), fg="white", bg="#35654d")
         self.name_label = Label(self, text=name, font=("", 12), fg="white", bg="#35654d")
@@ -33,6 +34,10 @@ class CardPile(Frame):
         self.amount = int(amount)
         self.amount_label.config(text=f"[{self.amount}]")
         self.draw()
+
+    def set_name(self, name):
+        self.name = name
+        self.name_label.config(text=name)
 
     def draw(self):
         """
@@ -65,6 +70,9 @@ class CardPile(Frame):
         """
         return self.name
 
+    def get_uid(self):
+        return self.uid
+
     def __str__(self):
         return self.get_name()
 
@@ -74,7 +82,7 @@ class InteractPile(CardPile):
     A card pile that can be interacted with
     """
     def __init__(self, parent, name=""):
-        super().__init__(parent, name=name)
+        super().__init__(parent, name=name, uid=0)
         self.update()
         width = self.winfo_reqwidth()
         height = self.winfo_reqheight()

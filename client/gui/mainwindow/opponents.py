@@ -16,13 +16,14 @@ class Opponents(Frame):
 
         self.opponents = []
 
-    def add(self, name, amount=0):
+    def add(self, uid, name, amount=0):
         """
         Add an opponent
+        :param uid: int
         :param name: str
         :param amount: int
         """
-        opponent = CardPile(self, name=name)
+        opponent = CardPile(self, name=name, uid=uid)
         opponent.set_amount(amount)
         self.opponents.append(opponent)
         self.draw()
@@ -37,16 +38,23 @@ class Opponents(Frame):
                 self.opponents.remove(opponent)
                 self.draw()
 
-    def set_amount(self, name, amount):
+    def set_amount(self, uid, amount):
         """
         Set opponent's card amount
-        :param name: str
+        :param uid: int
         :param amount: int
         """
+        opponent = self.get_opponent(uid)
+        opponent.set_amount(amount)
+
+    def set_name(self, uid, name):
+        opponent = self.get_opponent(uid)
+        opponent.set_name(name)
+
+    def get_opponent(self, uid):
         for opponent in self.opponents:
-            if opponent.get_name() == name:
-                opponent.set_amount(amount)
-                return
+            if opponent.get_uid() == uid:
+                return opponent
 
     def draw(self):
         """
@@ -63,13 +71,3 @@ class Opponents(Frame):
         for index, opponent in enumerate(self.opponents):
             x = first_coordinate + (index * (offset + pile_width))
             opponent.place(x=x, y=0)
-
-
-if __name__ == '__main__':
-    root = Tk()
-    opponents = Opponents(root)
-    opponents.add("Juuso", 0)
-    opponents.add("Petteri", 10)
-    opponents.add("Mervi", 3)
-    opponents.pack()
-    root.mainloop()

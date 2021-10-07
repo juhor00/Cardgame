@@ -8,33 +8,38 @@ class TurnList(Frame):
 
         self.players = []
 
-    def add_players(self, list_of_players):
+    def add(self, uid, name, turn):
         """
-        Adds players to turn list
-        :param list_of_players: list of str, "You" must be included
+        Add new player
+        :param uid: int
+        :param name: str
+        :param turn: bool
         """
-        # Clear old list
-        for widget in self.winfo_children():
-            if type(widget) == Player:
-                widget.grid_forget()
-
-        # You on top
-        while list_of_players[0] != "You":
-            list_of_players = [list_of_players[-1]] + list_of_players[:-1]
 
         # Grid players
         max_len = 0
-        for name in list_of_players:
-            if len(name) > max_len:
-                max_len = len(name)
-            player = Player(self, name)
-            player.grid(sticky="nsew")
-            self.players.append(player)
+        if len(name) > max_len:
+            max_len = len(name)
+        player = Player(self, name, uid)
+        player.grid(sticky="nsew")
+        self.players.append(player)
 
         self.update()
         for widget in self.winfo_children():
             if type(widget) == Player:
                 widget.config(width=max_len)
+
+        self.set_turn(uid, turn)
+
+    def remove(self, uid):
+        """
+        Remove player by uid
+        :param uid: int
+        """
+        for player in self.players:
+            if player.get_uid() == uid:
+                del player
+                return
 
     def set_turn(self, uid, turn):
         """
@@ -49,8 +54,17 @@ class TurnList(Frame):
                 else:
                     player.set_inactive()
 
+    def set_name(self, uid, name):
+        player = self.get_player(uid)
+        player.set_name(name)
+
     def is_empty(self):
         return len(self.players) == 0
+
+    def get_player(self, uid):
+        for player in self.players:
+            if player.get_uid() == uid:
+                return player
 
 
 class Player(Frame):
@@ -64,6 +78,10 @@ class Player(Frame):
 
     def __str__(self):
         return self.name
+
+    def set_name(self, name):
+        self.name = name
+        self.name_label.config(text=self.name)
 
     def get_name(self):
         return self.name

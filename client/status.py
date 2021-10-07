@@ -216,6 +216,12 @@ class Status:
     def get_hand_cards(self):
         return self.hand_cards
 
+    def set_play_cards(self, cards):
+        self.play_cards = cards
+
+    def get_play_cards(self):
+        return self.play_cards
+
     def set_allowed_claims(self, allowed):
         self.allowed_claims = allowed
 

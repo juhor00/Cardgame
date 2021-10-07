@@ -68,10 +68,25 @@ class GameWindow(Frame):
         self.play_cards.lower()
         self.gamedeck.lift()
 
+    def modify_opponent(self, uid, turn, amount, name):
+        """
+        Modify opponent info
+        :param uid: int
+        :param turn: bool
+        :param amount: int
+        """
+        self.opponents.set_name(uid, name)
+        self.opponents.set_amount(uid, amount)
+        self.turn.set_turn(uid, turn)
+        self.turn.set_name(uid, name)
 
-if __name__ == "__main__":
-    root = Tk()
-    mainwindow = GameWindow(root, 1280, 720)
-    mainwindow.test_values()
-    mainwindow.pack()
-    root.mainloop()
+    def add_opponent(self, uid, name, amount, turn):
+        """
+        Add opponent to Opponents and Turn
+        :param uid: int
+        :param name: str
+        :param amount: int
+        :param turn: bool
+        """
+        self.opponents.add(uid, name, amount)
+        self.turn.add(uid, name, turn)
