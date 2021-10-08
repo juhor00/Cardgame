@@ -119,6 +119,8 @@ class Client:
         else:
             print("Not allowed claim", rank, cards)
 
+        self.update_status()
+
     def on_suspect(self, _):
         """
         Action when player suspects
@@ -136,6 +138,12 @@ class Client:
 
     def update_gui(self):
         self.gui.update_status(deepcopy(self.status))
+
+    def update_status(self):
+        """
+        Update gui status based on Gui changes (hand / play cards)
+        """
+        self.status = self.gui.status
 
 
 if __name__ == '__main__':

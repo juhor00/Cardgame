@@ -58,7 +58,7 @@ class Gui(Tk):
             "play_cards_remove": lambda cards: self.gamewindow.play_cards.remove_cards(cards),
             "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
             "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
-            "turn": lambda value: None
+            "turn": lambda value: self.gamewindow.turn.set_turn(self.status.get_uid(), value),
         }
 
     def update_status(self, status):

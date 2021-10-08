@@ -23,6 +23,7 @@ class TurnList(Frame):
         player = Player(self, name, uid)
         player.grid(sticky="nsew")
         self.players.append(player)
+        print("Turnlist added", name, uid)
 
         self.update()
         for widget in self.winfo_children():
@@ -47,6 +48,7 @@ class TurnList(Frame):
         :param uid: int
         :param turn: bool, in turn
         """
+        print("Set turn to", uid, turn)
         for player in self.players:
             if player.get_uid() == uid:
                 if turn:

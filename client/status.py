@@ -282,6 +282,8 @@ class Opponent:
             return False
         if self.get_card_amount() != other.get_card_amount():
             return False
+        if self.is_in_turn() != other.is_in_turn():
+            return False
         return True
 
     def __str__(self):

@@ -74,6 +74,7 @@ class GameWindow(Frame):
         :param uid: int
         :param turn: bool
         :param amount: int
+        :param name: str
         """
         self.opponents.set_name(uid, name)
         self.opponents.set_amount(uid, amount)
