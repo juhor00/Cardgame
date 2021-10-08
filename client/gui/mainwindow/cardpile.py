@@ -14,15 +14,18 @@ class CardPile(Frame):
         width, height = calculate_size()
         pad = 8
         info_height = 50
+        offset = 10
         super().__init__(parent, bg="#35654d", width=width+3*pad, height=height+3*pad+info_height)
 
         self.amount = 0
         self.name = name
+        self.cards = []
 
         self.amount_label = Label(self, text=f"[{self.amount}]", font=("", 12), fg="white", bg="#35654d")
         self.name_label = Label(self, text=name, font=("", 12), fg="white", bg="#35654d")
 
-        self.draw()
+        self.amount_label.place(x=0, y=3 * pad + height + offset)
+        self.name_label.place(x=40, y=3 * pad + height + offset)
 
     def set_amount(self, amount):
         """
@@ -30,37 +33,41 @@ class CardPile(Frame):
         :param amount: str to int
         :return:
         """
-        self.amount = int(amount)
-        self.amount_label.config(text=f"[{self.amount}]")
-        self.draw()
+        if amount == self.amount:
+            return
+        else:
+            self.amount = int(amount)
+            self.amount_label.config(text=f"[{amount}]")
+
+            change = amount - len(self.cards)
+            for _ in range(abs(change)):
+                if change > 0:
+                    self.add()
+                else:
+                    self.remove()
 
     def set_name(self, name):
         self.name = name
         self.name_label.config(text=name)
 
-    def draw(self):
+    def add(self):
         """
-        Draws the pile
+        Add ClosedCard to pile
         """
-        for widget in self.winfo_children():
-            widget.place_forget()
+        card_amount = len(self.cards)
+        if card_amount == 4:
+            return
 
         pad = 8
-        # Cards
-        card_amount = self.amount
-        if self.amount > 4:
-            card_amount = 4
 
-        for count in range(card_amount):
-            card = ClosedCard(self)
-            card.place(x=count*pad, y=count*pad)
-            card.lift()
+        card = ClosedCard(self)
+        card.place(x=card_amount*pad, y=card_amount*pad)
+        card.lift()
+        self.cards.append(card)
 
-        # Amount
-        offset = 10
-        width, height = calculate_size()
-        self.amount_label.place(x=0, y=3 * pad + height + offset)
-        self.name_label.place(x=40, y=3*pad + height + offset)
+    def remove(self):
+        if len(self.cards) > 0:
+            del self.cards[-1]
 
     def get_name(self):
         """
@@ -88,6 +95,13 @@ class InteractPile(CardPile):
         hover_y = 20
         self.config(width=width + hover_x, height=height+hover_y)
 
+        pad = 8
+        offset = 10
+        width, height = calculate_size()
+
+        self.amount_label.place(x=0, y=3 * pad + height + offset + hover_y)
+        self.name_label.place(x=40, y=3 * pad + height + offset + hover_y)
+
         self.elevated = False
         self.elevated_y = None
         self.elevated_x = None
@@ -95,35 +109,48 @@ class InteractPile(CardPile):
         self.normal_x = None
         self.top = None
 
-    def draw(self):
-
-        for widget in self.winfo_children():
-            widget.place_forget()
+    def add(self):
+        """
+        Add ClosedCard to pile
+        """
+        card_amount = len(self.cards)
+        if card_amount == 4:
+            return
 
         pad = 8
         hover_y = 20
-        # Cards
-        card_amount = self.amount
-        if self.amount > 4:
-            card_amount = 4
 
-        for count in range(card_amount):
-            card = ClosedCard(self)
-            card.place(x=count * pad, y=count * pad + hover_y)
-            card.lift()
+        card = ClosedCard(self)
+        card.place(x=card_amount * pad, y=card_amount * pad + hover_y)
+        card.lift()
+        self.cards.append(card)
+        print("Add", card)
 
-        # Amount
-        offset = 10
-        width, height = calculate_size()
-        self.amount_label.place(x=0, y=3 * pad + height + offset + hover_y)
-        self.name_label.place(x=40, y=3 * pad + height + offset + hover_y)
+    def remove(self):
+        if len(self.cards) > 0:
+            print("Remove", self.cards[-1])
+            card = self.cards[-1]
+            card.place_forget()
+            del self.cards[-1]
 
     def set_amount(self, amount):
         """
         Update the amount and top card
         :param amount: int
         """
-        super().set_amount(amount)
+        if amount == self.amount:
+            return
+        else:
+            self.amount = int(amount)
+            self.amount_label.config(text=f"[{amount}]")
+
+            change = amount - len(self.cards)
+            print("Change:", change)
+            for _ in range(abs(change)):
+                if change > 0:
+                    self.add()
+                else:
+                    self.remove()
         self.update_top_card()
 
     def on_enter(self, event):
@@ -198,16 +225,11 @@ class InteractPile(CardPile):
         Updates the top card
         """
         # Top card
-        cards = []
-        for child in self.winfo_children():
-            if type(child) == ClosedCard:
-                cards.append(child)
-        if len(cards) == 0:
+
+        if len(self.cards) == 0:
             return
-        top = cards[-1]
+        top = self.cards[-1]
         if top != self.top:
-            if self.top is not None:
-                self.top.destroy()
             self.elevated_reset()
         top.bind("<Enter>", self.on_enter)
         top.bind("<Leave>", self.on_leave)
