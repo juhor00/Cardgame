@@ -124,11 +124,9 @@ class InteractPile(CardPile):
         card.place(x=card_amount * pad, y=card_amount * pad + hover_y)
         card.lift()
         self.cards.append(card)
-        print("Add", card)
 
     def remove(self):
         if len(self.cards) > 0:
-            print("Remove", self.cards[-1])
             card = self.cards[-1]
             card.place_forget()
             del self.cards[-1]
@@ -145,7 +143,6 @@ class InteractPile(CardPile):
             self.amount_label.config(text=f"[{amount}]")
 
             change = amount - len(self.cards)
-            print("Change:", change)
             for _ in range(abs(change)):
                 if change > 0:
                     self.add()
@@ -236,11 +233,3 @@ class InteractPile(CardPile):
         top.bind("<Motion>", self.on_enter)
         top.bind("<Button-1>", self.on_click)
         self.top = top
-
-
-if __name__ == "__main__":
-    root = Tk()
-    cardpile = InteractPile(root, name="Test")
-    cardpile.set_amount(10)
-    cardpile.pack()
-    root.mainloop()

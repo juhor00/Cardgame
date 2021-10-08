@@ -50,8 +50,8 @@ class Gui(Tk):
             "deck_amount": lambda value: self.gamewindow.deck.set_amount(value),
             "gamedeck_amount": lambda value: self.gamewindow.gamedeck.set_amount(value),
             "claim": lambda claim: self.gamewindow.claim.new(claim[0], claim[1]),
-            "display_add": lambda cards: self.add_display(cards),
-            "display_remove": lambda cards: self.remove_display(cards),
+            "display_add": lambda cards: self.gamewindow.play_cards.add_cards(cards),
+            "display_remove": lambda cards: self.gamewindow.play_cards.remove_cards(cards),
             "hand_cards_add": lambda cards: self.gamewindow.hand.add_cards(cards),
             "hand_cards_remove": lambda cards: self.gamewindow.hand.remove_cards(cards),
             "play_cards_add": lambda cards: self.gamewindow.play_cards.add_cards(cards),
@@ -165,12 +165,6 @@ class Gui(Tk):
         """
         if self.status.is_in_lobby():
             self.lobby.remove_all_and_add_opponents(self.status.get_opponents())
-
-    def add_display(self, cards):
-        pass
-
-    def remove_display(self, cards):
-        pass
 
     def update_card_status(self):
         hand_cards = self.gamewindow.hand.get_cards()
