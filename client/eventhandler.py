@@ -133,6 +133,7 @@ class EventHandler:
         Handle claimgrid events
         :param data: dict
         """
+        print("Claimgrid event")
         if "allowed" in data:
             allowed = data["allowed"]
             self.client.status.set_allowed_claims(allowed)

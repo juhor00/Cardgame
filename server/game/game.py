@@ -253,3 +253,19 @@ class Game:
             return False
 
         return True
+
+    def get_allowed_claims(self):
+        """
+        Return list of allowed and list of denied claims
+        :return: list of int
+        """
+        allowed = []
+        denied = []
+        for rank in range(2, 15):
+            print(rank)
+            if self.is_allowed_rank(rank):
+                allowed.append(rank)
+            else:
+                denied.append(rank)
+
+        return allowed, denied

@@ -45,7 +45,6 @@ class EventHandler:
             break
         if len(self.clients) == 0:
             self.in_lobby = True
-        print("In lobby: ", self.in_lobby)
 
         return to_remove
 
@@ -188,6 +187,9 @@ class EventHandler:
         # Player data
         self.broadcast_player_data()
 
+        # Allowed claims
+        self.broadcast_allowed_claims()
+
     def broadcast_opponent_data(self):
         """
         Send opponent data to each player
@@ -245,13 +247,24 @@ class EventHandler:
         """
         Broadcasts last played cards
         """
-        print(self.game.gamedeck.cards)
         all_cards = self.game.gamedeck.get_cards()
-        print("All", all_cards)
         amount = self.game.gamedeck.get_last_amount()
         cards = all_cards[-amount:]
-        print("Cards", cards)
         self.sendall({"game": {"display": cards}})
+
+    def broadcast_allowed_claims(self):
+        """
+        Broadcast allowed claims
+        If player is not in turn deny all claims
+        """
+        for client in self.clients:
+            player = self.game.turnmanager.get_player(client.get_uid())
+            if self.game.turnmanager.is_in_turn(player) or self.game.turnmanager.is_first_round():
+                allowed, denied = self.game.get_allowed_claims()
+            else:
+                allowed = []
+                denied = list(range(2, 15))
+            self.send(client, {"claimgrid": {"allowed": allowed, "denied": denied}})
 
     def check_start(self):
         """

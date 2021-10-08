@@ -8,10 +8,7 @@ def compare(a, b):
     :param b:
     :return: type(a) or None
     """
-    if type(a) == list:
-        if a != b:
-            return a-b
-    elif a != b:
+    if a != b:
         return a
     else:
         return None
@@ -75,7 +72,7 @@ class Status:
             # Lists
             if type(self_val) is list:
                 # Claims
-                if self_attr in ["allowed claims", "denied claims"]:
+                if self_attr in ["allowed_claims", "denied_claims"]:
                     res_val = compare(self_val, other_val)
                     change.add_attribute(self_attr, res_val)
 
