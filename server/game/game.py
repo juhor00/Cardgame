@@ -114,6 +114,14 @@ class Game:
             self.turnmanager.turn_to(claimer.get_name())
         return True
 
+    def can_suspect(self, player):
+        """
+        Return True if player is allowed to suspect
+        :param player: Player
+        :return: bool
+        """
+        return player != self.last_played_player
+
     def deck_play(self, player):
         """
 

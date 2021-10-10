@@ -126,16 +126,18 @@ class EventHandler:
 
             # Game deck discard check
             if self.game.gamedeck.to_discard():
+                self.broadcast_pause()
                 new_thread(self.wait_for_discard)
-
-            self.broadcast_game()
+            else:
+                self.broadcast_game()
 
         if "suspect" in data:
             player = self.get_player(client)
-            self.broadcast_pause()
-            self.broadcast_played_cards()
-            self.game.suspect(player)
-            new_thread(self.wait_for_display)
+            if self.game.can_suspect(player):
+                self.broadcast_pause()
+                self.broadcast_played_cards()
+                self.game.suspect(player)
+                new_thread(self.wait_for_display)
 
     def broadcast_lobby(self):
         """
