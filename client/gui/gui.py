@@ -120,6 +120,8 @@ class Gui(Tk):
 
     def on_hand_click(self, event):
         if self.status.is_in_turn():
+            if len(self.gamewindow.play_cards.get_cards()) >= 4:
+                return
             card = event.data["content"]
             self.gamewindow.hand.remove_cards([card])
             self.gamewindow.play_cards.add_cards([card])
