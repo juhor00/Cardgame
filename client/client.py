@@ -62,6 +62,7 @@ class Client:
         while True:
             try:
                 message = json.loads(self.network.get())
+                print("CLIENT message:", message)
                 self.eventhandler.new(message)
             except json.JSONDecodeError as e:
                 print("Stop receiving:", e)
@@ -109,17 +110,17 @@ class Client:
         """
         rank = int(event.data["content"])
         cards = self.gui.status.get_play_cards()
-        self.gui.gamewindow.play_cards.empty()
-        self.gui.gamewindow.remove_play_cards()
 
-        if self.status.get_turn():
+        self.update_status()
+        self.status.set_play_cards([])
+        self.update_gui()
+
+        if self.status.is_in_turn():
             print("Send: claim", rank, cards)
             data = {"game": {"played": cards, "claimed": rank}}
             self.send(data)
         else:
             print("Not allowed claim", rank, cards)
-
-        self.update_status()
 
     def on_suspect(self, _):
         """
@@ -143,7 +144,8 @@ class Client:
         """
         Update gui status based on Gui changes (hand / play cards)
         """
-        self.status = self.gui.status
+        self.status = deepcopy(self.gui.status)
+        print("CLIENT status:", self.status)
 
 
 if __name__ == '__main__':

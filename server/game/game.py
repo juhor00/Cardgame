@@ -262,7 +262,6 @@ class Game:
         allowed = []
         denied = []
         for rank in range(2, 15):
-            print(rank)
             if self.is_allowed_rank(rank):
                 allowed.append(rank)
             else:

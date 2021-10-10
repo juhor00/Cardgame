@@ -49,6 +49,9 @@ class Status:
         self.denied_claims = []
         self.turn = None
 
+    def __str__(self):
+        return str(vars(self))
+
     def compare(self, other: 'Status'):
         """
         Compares two Status instances and returns the difference as Changes
@@ -208,7 +211,22 @@ class Status:
         return self.display
 
     def set_hand_cards(self, cards):
-        self.hand_cards = cards
+        """
+        Set hand cards. If card is already in play cards, and player is in turn, don't change
+        :param cards: list of str
+        """
+        corrected_cards = []
+        for card in cards:
+            if card in self.play_cards:
+                if self.is_in_turn():
+                    continue
+                else:
+                    corrected_cards.append(card)
+                    self.play_cards.remove(card)
+            else:
+                corrected_cards.append(card)
+
+        self.hand_cards = corrected_cards
 
     def get_hand_cards(self):
         return self.hand_cards
@@ -234,7 +252,7 @@ class Status:
     def set_turn(self, turn):
         self.turn = turn
 
-    def get_turn(self):
+    def is_in_turn(self):
         return self.turn
 
 
@@ -242,6 +260,9 @@ class Changes:
 
     def __init__(self):
         pass
+
+    def __str__(self):
+        return str(vars(self))
 
     def add_attribute(self, name, value):
 

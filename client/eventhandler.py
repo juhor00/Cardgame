@@ -114,7 +114,6 @@ class EventHandler:
         :param data: dict
         """
         for opponent in data:
-            print(opponent)
             uid = opponent["uid"]
             amount = opponent["amount"]
             self.client.status.set_opponent_amount(uid, amount)
@@ -133,7 +132,6 @@ class EventHandler:
         Handle claimgrid events
         :param data: dict
         """
-        print("Claimgrid event")
         if "allowed" in data:
             allowed = data["allowed"]
             self.client.status.set_allowed_claims(allowed)

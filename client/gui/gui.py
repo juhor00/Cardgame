@@ -40,7 +40,7 @@ class Gui(Tk):
         self.render_lobby()
         self.is_fullscreen = False
         self.set_binds()
-        self.gamewindow.turn.add(self.status.get_uid(), "You", self.status.get_turn())
+        self.gamewindow.turn.add(self.status.get_uid(), "You", self.status.is_in_turn())
 
         self.update_types = {
             "in_lobby": lambda value: self.render_lobby() if value else self.render_gamewindow(),
@@ -67,6 +67,8 @@ class Gui(Tk):
         :param status: Status
         """
         changes = status.compare(self.status)
+        print("GUI changes:", changes)
+        print("GUI status:", status)
         self.status = status
         self.apply_changes(changes)
 
@@ -117,14 +119,14 @@ class Gui(Tk):
         bind_event_data(self.gamewindow.play_cards, "<<Card-clicked>>", self.on_play_click)
 
     def on_hand_click(self, event):
-        if self.status.get_turn():
+        if self.status.is_in_turn():
             card = event.data["content"]
             self.gamewindow.hand.remove_cards([card])
             self.gamewindow.play_cards.add_cards([card])
             self.update_card_status()
 
     def on_play_click(self, event):
-        if self.status.get_turn():
+        if self.status.is_in_turn():
             card = event.data["content"]
             self.gamewindow.play_cards.remove_cards([card])
             self.gamewindow.hand.add_cards([card])
@@ -170,5 +172,7 @@ class Gui(Tk):
         hand_cards = self.gamewindow.hand.get_cards()
         play_cards = self.gamewindow.play_cards.get_cards()
 
-        self.status.set_hand_cards(hand_cards)
         self.status.set_play_cards(play_cards)
+        self.status.set_hand_cards(hand_cards)
+
+        print("GUI update:", self.status)
