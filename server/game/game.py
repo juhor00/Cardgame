@@ -94,10 +94,11 @@ class Game:
         if self.gamedeck.is_empty():
             return False
 
-        if self.turnmanager.is_in_turn(player):
+        claimer = self.last_played_player
+
+        if claimer == player:
             return False
 
-        claimer = self.last_played_player
         if self.gamedeck.lied():
             # Player who claimed the cards draw all
             # Player who suspected gets the turn
@@ -129,14 +130,6 @@ class Game:
             self.gamedeck.empty()
             self.turnmanager.turn_to(self.last_played_player.get_name())
             print("Discarded")
-
-    def handle_remove(self):
-        """
-        Discard cards from gamedeck if needed
-        """
-        if self.gamedeck.to_discard():
-            self.gamedeck.empty()
-            self.turnmanager.stay_next_turn()
 
     def handle_win(self):
         """

@@ -128,8 +128,7 @@ class Client:
         :param _: eventhandler
         """
         print("Send: suspect")
-        if not self.status.is_in_turn():
-            self.send({"game": {"suspect": True}})
+        self.send({"game": {"suspect": True}})
 
     def on_deck(self, _):
         """
