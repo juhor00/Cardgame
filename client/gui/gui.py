@@ -127,12 +127,30 @@ class Gui(Tk):
             self.gamewindow.play_cards.add_cards([card])
             self.update_card_status()
 
+            if len(self.gamewindow.play_cards.get_cards()) > 1:
+                # Disable 2, 10 and Ace because they can be only played 1 at a time
+                disable = [2, 10, 14]
+                denied = set(self.status.get_denied_claims())
+                denied = denied.intersection(disable)
+                self.status.set_denied_claims(denied)
+                self.gamewindow.claimgrid.disable_buttons(disable, temp=True)
+
     def on_play_click(self, event):
         if self.status.is_in_turn():
             card = event.data["content"]
             self.gamewindow.play_cards.remove_cards([card])
             self.gamewindow.hand.add_cards([card])
             self.update_card_status()
+
+            if len(self.gamewindow.play_cards.get_cards()) <= 1:
+                # Enable 2, 10 and Ace because they can be played
+                enable = {2, 10, 14}
+                allowed = set(self.status.get_allowed_claims())
+                denied = set(self.status.get_denied_claims())
+                allowed = allowed.union(enable)-denied
+
+                self.status.set_allowed_claims(list(allowed))
+                self.gamewindow.claimgrid.enable_buttons(list(enable), temp=True)
 
     def modify_opponents(self, opponents):
 

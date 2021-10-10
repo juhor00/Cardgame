@@ -11,6 +11,8 @@ class ClaimGrid(Frame):
     def __init__(self, master):
         super().__init__(master, bg="#35654d")
         self.buttons = []
+        self.enabled = []
+        self.disabled = []
         self.create_buttons()
 
     def on_click(self, button: Button):
@@ -43,38 +45,63 @@ class ClaimGrid(Frame):
                 column = index - 9
 
             frame.grid(row=row, column=column, sticky="nsew")
-            button = Button(frame, text=rank, bg="grey", fg="white")
+            button = ClaimButton(frame, OpenedCard.rank_to_int(rank))
+            button.config(bg="grey", fg="white", text=rank)
             button.config(command=lambda param=button: self.on_click(param))
             button.pack(expand=True, fill=BOTH)
             self.buttons.append(button)
 
-    def disable_buttons(self, buttons):
+    def disable_buttons(self, buttons, temp=False):
         """
         Disables given buttons
         :param buttons: list of str
+        :param temp: bool, temporary disable
         """
-        for button_text in buttons:
-            for button in self.buttons:
-                button_rank = OpenedCard.rank_to_int(button["text"])
-                if button_text == button_rank:
-                    button.config(state="disabled")
-                    break
+        for rank in buttons:
+            button = self.get_button(rank)
+            button.disable()
 
-    def enable_buttons(self, buttons):
+            if not temp:
+                if button in self.enabled:
+                    self.enabled.remove(button)
+            self.disabled.append(button)
+
+    def enable_buttons(self, buttons, temp=False):
         """
         Enables given buttons
         :param buttons: list of str
+        :param temp: bool, was temporarily disabled
         """
-        for button_text in buttons:
-            for button in self.buttons:
-                button_rank = OpenedCard.rank_to_int(button["text"])
-                if button_text == button_rank:
-                    button.config(state="normal")
-                    break
+
+        for rank in buttons:
+            button = self.get_button(rank)
+
+            if temp:
+                if button not in self.enabled:
+                    continue
+
+            button.enable()
+            if button not in self.enabled:
+                self.enabled.append(button)
+
+    def get_button(self, rank):
+        for button in self.buttons:
+            if button.get_rank() == rank:
+                return button
 
 
-if __name__ == "__main__":
-    root = Tk()
-    grid = ClaimGrid(root)
-    grid.pack()
-    root.mainloop()
+class ClaimButton(Button):
+
+    def __init__(self, master, rank):
+        super().__init__(master=master, text=rank)
+
+        self.rank = rank
+
+    def get_rank(self):
+        return self.rank
+
+    def enable(self):
+        self.config(state="normal")
+
+    def disable(self):
+        self.config(state="disabled")
