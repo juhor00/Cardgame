@@ -94,6 +94,9 @@ class Game:
         if self.gamedeck.is_empty():
             return False
 
+        if self.turnmanager.is_in_turn(player):
+            return False
+
         claimer = self.last_played_player
         if self.gamedeck.lied():
             # Player who claimed the cards draw all
