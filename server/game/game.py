@@ -60,9 +60,17 @@ class Game:
 
         for card in cards:
             if not player.hand.has_card(card):
+                print(f"Player {player} doesn't have card {card}. Hand: {player.hand.get_cards()}")
                 return False
         if not self.is_allowed_play(cards, claim):
+            print(f"Claim {claim} not allowed. Card amount was {len(cards)}")
             return False
+
+        # These claims can be only played 1 card at a time
+        if claim in [2, 10, 14]:
+            if len(cards) > 1:
+                print(f"Only 1 card can be played when claiming {claim}. {player} played {len(cards)} cards.")
+                return False
 
         # First round anyone can play
         if self.turnmanager.is_first_round():
@@ -71,6 +79,8 @@ class Game:
         # Check if is allowed to play
         else:
             if not player == self.turnmanager.get_active_player():
+                print(f"Player {player} is not in turn and is not allowed to play. "
+                      f"In turn: {self.turnmanager.get_active_player()}")
                 return False
 
         # Player who played last won
