@@ -126,6 +126,7 @@ class EventHandler:
 
             # Game deck discard check
             if self.game.gamedeck.to_discard():
+                self.broadcast_game()
                 self.broadcast_pause()
                 new_thread(self.wait_for_discard)
             else:
@@ -244,6 +245,10 @@ class EventHandler:
             turn = False
             player_data.append({"uid": uid, "turn": turn})
         self.sendall({"turnlist": player_data})
+        allowed = []
+        denied = list(range(2, 15))
+
+        self.sendall({"claimgrid": {"allowed": allowed, "denied": denied}})
 
     def broadcast_played_cards(self):
         """
