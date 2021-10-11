@@ -17,6 +17,7 @@ class EventHandler:
         self.server = server
         self.in_lobby = True
         self.game = None
+        self.displaying = False
 
         self.clients = []
 
@@ -138,6 +139,7 @@ class EventHandler:
                 self.broadcast_pause()
                 self.broadcast_played_cards()
                 self.game.suspect(player)
+                self.displaying = True
                 new_thread(self.wait_for_display)
 
     def broadcast_lobby(self):
@@ -317,8 +319,9 @@ class EventHandler:
         """
         print(f"Waiting {wait} seconds to discard")
         sleep(wait)
-        self.game.discard()
-        self.broadcast_game()
+        if not self.is_displaying():
+            self.game.discard()
+            self.broadcast_game()
 
     def wait_for_display(self, wait=5):
         """
@@ -328,4 +331,8 @@ class EventHandler:
         print(f"Waiting {wait} seconds for displaying")
         sleep(wait)
         self.sendall({"game": {"display": []}})
+        self.displaying = False
         self.broadcast_game()
+
+    def is_displaying(self):
+        return self.displaying
