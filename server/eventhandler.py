@@ -248,7 +248,9 @@ class EventHandler:
             player_data.append({"uid": uid, "turn": turn})
         self.sendall({"turnlist": player_data})
         allowed = []
-        denied = list(range(2, 15))
+        denied = {}
+        for rank in range(2, 15):
+            denied[rank] = 8
 
         self.sendall({"claimgrid": {"allowed": allowed, "denied": denied}})
 
@@ -272,7 +274,9 @@ class EventHandler:
                 allowed, denied = self.game.get_allowed_claims()
             else:
                 allowed = []
-                denied = list(range(2, 15))
+                denied = {}
+                for rank in range(2, 15):
+                    denied[rank] = 8
             self.send(client, {"claimgrid": {"allowed": allowed, "denied": denied}})
 
     def check_start(self):

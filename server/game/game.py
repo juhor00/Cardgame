@@ -200,7 +200,8 @@ class Game:
         :param claim: int, claimed rank
         :return: bool
         """
-        if not self.is_allowed_rank(claim):
+        allowed, reason = self.is_allowed_rank(claim)
+        if not allowed:
             print(f"Error: Invalid claim")
             return False
         if not self.correct_amount_of_cards(cards):
@@ -211,42 +212,38 @@ class Game:
 
     def is_allowed_rank(self, rank):
         """
-        Return True if rank is allowed
+        Return tuple (bool, int), If allowed, return True, 0
+        Else return False and reason ID (int)
+        Reasons are in data_structure.txt
         :param rank: int
-        :return: bool
+        :return: bool, int
         """
         # Empty gamedeck
         if self.gamedeck.get_last_rank() is None:
             if rank == 10 or rank == 14:
-                return False
+                return False, 1
             if not self.deck.is_empty():
                 if rank > 10:
-                    return False
-            return True
+                    return False, 2
+            return True, 0
 
         if rank == 2:
-            return True
+            return True, 0
         if rank < self.gamedeck.get_last_rank():
-            return False
+            return False, 3
         if self.gamedeck.get_last_rank() == 2:
-            return False
+            return False, 4
         if rank == 10:
             if self.gamedeck.get_last_rank() > 9:
-                return False
+                return False, 5
         if rank == 14:
             if self.gamedeck.get_last_rank() < 11:
-                return False
+                return False, 6
         if self.gamedeck.get_last_rank() < 7:
             if 11 <= rank <= 13:
-                return False
-        if rank == 10 or rank == 14:
-            if self.deck.is_empty():
-                return False
-        if rank > 10 and self.gamedeck.get_last_rank() is None:
-            if not self.deck.is_empty():
-                return False
+                return False, 7
 
-        return True
+        return True, 0
 
     def correct_amount_of_cards(self, cards):
         """
@@ -270,15 +267,16 @@ class Game:
 
     def get_allowed_claims(self):
         """
-        Return list of allowed and list of denied claims
-        :return: list of int
+        Return list of allowed and dict of denied claims
+        :return: list of int, dict of int: str
         """
         allowed = []
-        denied = []
+        denied = {}
         for rank in range(2, 15):
-            if self.is_allowed_rank(rank):
+            is_allowed, reason = self.is_allowed_rank(rank)
+            if is_allowed:
                 allowed.append(rank)
             else:
-                denied.append(rank)
+                denied[rank] = reason
 
         return allowed, denied

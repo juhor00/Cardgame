@@ -55,7 +55,7 @@ FROM SERVER
 "claimgrid":
 	{
 	"allowed": 	[ (int) <rank> ...]
-	denied: 	[ (int) <rank> ...]
+	denied: 	{(int) <rank>: (int) <reason>, ...}
 	},
 "turnlist":
     [
@@ -90,14 +90,15 @@ CLIENT TO SERVER
 }
 
 
-CLIENT/
-    client.py
-
-    GUI/
-    gui.py
-
-        GAME/
-        gamewindow.py
-
-            ASSETS/
-                kuva.png
+DENIED REASONS:
+    {
+    0: None
+    1: 10 or Ace can't be played when there are no played cards
+    2: Can't play court cards before deck is empty
+    3: Can't play rank that is less than already played
+    4: Only 2 can be played on top of 2
+    5: 10 can only be played if last played is 9 or lower
+    6: Ace can only be played if last played is Jack or higher
+    7: Court cards can only be played if last played is 7 or higher
+    8: Not allowed when it is not your turn
+    }
