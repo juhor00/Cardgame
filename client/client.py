@@ -145,7 +145,6 @@ class Client:
         Update gui status based on Gui changes (hand / play cards)
         """
         self.status = deepcopy(self.gui.status)
-        print("CLIENT status:", self.status)
 
 
 if __name__ == '__main__':

@@ -50,8 +50,8 @@ class Gui(Tk):
             "deck_amount": lambda value: self.gamewindow.deck.set_amount(value),
             "gamedeck_amount": lambda value: self.gamewindow.gamedeck.set_amount(value),
             "claim": lambda claim: self.gamewindow.claim.new(claim[0], claim[1]),
-            "display_add": lambda cards: self.gamewindow.play_cards.add_cards(cards),
-            "display_remove": lambda cards: self.gamewindow.play_cards.remove_cards(cards),
+            "display_add": lambda cards: self.add_display(cards),
+            "display_remove": lambda cards: self.remove_display(cards),
             "hand_cards_add": lambda cards: self.gamewindow.hand.add_cards(cards),
             "hand_cards_remove": lambda cards: self.gamewindow.hand.remove_cards(cards),
             "play_cards_add": lambda cards: self.gamewindow.play_cards.add_cards(cards),
@@ -138,6 +138,9 @@ class Gui(Tk):
                 self.status.set_denied_claims(denied_new)
                 self.gamewindow.claimgrid.disable_buttons(denied_new, temp=True)
 
+        if not self.gamewindow.play_cards.is_empty():
+            self.gamewindow.lift_play_cards()
+
     def on_play_click(self, event):
         if self.status.is_in_turn():
             card = event.data["content"]
@@ -154,6 +157,8 @@ class Gui(Tk):
 
                 self.status.set_allowed_claims(list(allowed))
                 self.gamewindow.claimgrid.enable_buttons(list(enable), temp=True)
+        if self.gamewindow.play_cards.is_empty():
+            self.gamewindow.lower_play_cards()
 
     def modify_opponents(self, opponents):
 
@@ -198,4 +203,10 @@ class Gui(Tk):
         self.status.set_play_cards(play_cards)
         self.status.set_hand_cards(hand_cards)
 
-        print("GUI update:", self.status)
+    def add_display(self, cards):
+        self.gamewindow.play_cards.add_cards(cards)
+        self.gamewindow.lift_play_cards()
+
+    def remove_display(self, cards):
+        self.gamewindow.play_cards.remove_cards(cards)
+        self.gamewindow.lower_play_cards()

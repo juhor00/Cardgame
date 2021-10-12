@@ -1,10 +1,9 @@
 from tkinter import *
 
 
-class Claim(Label):
+class ClaimText(Label):
     """
-    Frame to show info about claimed cards
-    Amount and claimed rank
+    Claim shown as text
     """
     def __init__(self, parent):
         super().__init__(parent)
@@ -30,9 +29,43 @@ class Claim(Label):
         self.config(text="No cards played")
 
 
+class Claim(Frame):
+    """
+    Claim shown graphically
+    """
+    def __init__(self, parent):
+        super().__init__(parent, bg="#35654d")
+        self.parent = parent
+
+        self.placement = {
+            1: lambda label, count: label.grid(),
+            2: lambda label, count: label.grid(column=count, row=0),
+            3: lambda label, count: label.grid(column=count % 2, row=int(count / 2), columnspan=1 if count <= 1 else 2),
+            4: lambda label, count: label.grid(column=count % 2, row=int(count / 2)),
+        }
+        self.widgets = []
+
+    def new(self, amount, rank):
+
+        self.reset()
+
+        for count in range(amount):
+            label = Label(self, text=rank, bg="white", font=("Helvetica", 36), width=2, height=2)
+            self.placement[amount](label, count)
+            label.grid_configure(padx=4, pady=4)
+            self.widgets.append(label)
+
+    def reset(self):
+        for widget in self.widgets:
+            widget.grid_forget()
+            del widget
+
+
+
+
 if __name__ == '__main__':
     root = Tk()
     claim = Claim(root)
     claim.pack()
-    claim.new(3, "J")
+    claim.new(3, "A")
     root.mainloop()

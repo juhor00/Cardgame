@@ -1,18 +1,17 @@
-from tkinter import *
 try:
     from .hand import Hand
     from .claimgrid import ClaimGrid
     from .turnlist import TurnList
-    from .cardpile import CardPile, InteractPile
+    from .cardpile import *
     from .opponents import Opponents
-    from .claim import Claim
+    from .claim import ClaimText
 except ImportError:
     from hand import Hand
     from claimgrid import ClaimGrid
     from turnlist import TurnList
-    from cardpile import CardPile, InteractPile
+    from cardpile import *
     from opponents import Opponents
-    from claim import Claim
+    from claim import ClaimText
 
 
 class GameWindow(Frame):
@@ -39,7 +38,7 @@ class GameWindow(Frame):
         self.claim = Claim(self)
 
         self.place_widgets()
-        self.remove_play_cards()
+        self.lower_play_cards()
 
     def place_widgets(self):
         """
@@ -49,24 +48,26 @@ class GameWindow(Frame):
         self.gamedeck.place(x=500, y=220)
         self.hand.place(x=270, y=480)
         self.claimgrid.place(x=870, y=530)
-        self.claim.place(x=880, y=340)
+        self.claim.place(x=680, y=220)
         self.turn.place(x=1060, y=240)
         self.opponents.place(x=0, y=4)
         self.play_cards.place(x=270, y=230)
 
-    def place_play_cards(self):
+    def lift_play_cards(self):
         """
         Places play cards on top of game deck
         """
         self.gamedeck.lower()
         self.play_cards.lift()
+        self.claim.lift()
 
-    def remove_play_cards(self):
+    def lower_play_cards(self):
         """
         Remove play cards and show game deck
         """
         self.play_cards.lower()
         self.gamedeck.lift()
+        self.claim.lift()
 
     def modify_opponent(self, uid, turn, amount, name):
         """

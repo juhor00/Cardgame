@@ -2,8 +2,10 @@ from tkinter import *
 
 try:
     from .card import ClosedCard, calculate_size
+    from .claim import Claim
 except ImportError:
     from card import ClosedCard, calculate_size
+    from claim import Claim
 
 
 class CardPile(Frame):

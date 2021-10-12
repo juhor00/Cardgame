@@ -230,6 +230,9 @@ class Hand(Frame):
         self.cards = []
         self.draw()
 
+    def is_empty(self):
+        return len(self.cards) == 0
+
 
 if __name__ == "__main__":
     root = Tk()
