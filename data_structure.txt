@@ -51,6 +51,7 @@ FROM SERVER
 		}
 	"turn":     (bool) <state>  # Client's turn
 	"display":  [   (str) <card> ...]   # Play cards that can't be removed
+	"duration": (int) <time>    # How long display is on
 	},
 "claimgrid":
 	{

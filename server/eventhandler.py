@@ -137,10 +137,11 @@ class EventHandler:
             player = self.get_player(client)
             if self.game.can_suspect(player):
                 self.broadcast_pause()
-                self.broadcast_played_cards()
+                duration = 5
+                self.broadcast_played_cards(duration)
                 self.game.suspect(player)
                 self.displaying = True
-                new_thread(self.wait_for_display)
+                new_thread(lambda: self.wait_for_display(duration))
 
     def broadcast_lobby(self):
         """
@@ -254,14 +255,15 @@ class EventHandler:
 
         self.sendall({"claimgrid": {"allowed": allowed, "denied": denied}})
 
-    def broadcast_played_cards(self):
+    def broadcast_played_cards(self, duration):
         """
-        Broadcasts last played cards
+        Broadcasts last played cards and duration
+        :param duration: int, seconds
         """
         all_cards = self.game.gamedeck.get_cards()
         amount = self.game.gamedeck.get_last_amount()
         cards = all_cards[-amount:]
-        self.sendall({"game": {"display": cards}})
+        self.sendall({"game": {"display": cards, "duration": duration}})
 
     def broadcast_allowed_claims(self):
         """
@@ -327,7 +329,7 @@ class EventHandler:
             self.game.discard()
             self.broadcast_game()
 
-    def wait_for_display(self, wait=5):
+    def wait_for_display(self, wait):
         """
         Show display cards for <wait> seconds and continue after
         :param wait: int, seconds

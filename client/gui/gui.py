@@ -59,6 +59,7 @@ class Gui(Tk):
             "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
             "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
             "turn": lambda value: self.gamewindow.turn.set_turn(self.status.get_uid(), value),
+            "duration": lambda value: print(value)
         }
 
     def update_status(self, status):

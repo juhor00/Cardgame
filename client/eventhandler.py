@@ -91,22 +91,16 @@ class EventHandler:
         Handle game events
         :param data: dict
         """
-        if "amount" in data:
-            amount = data["amount"]
-            self.client.status.set_gamedeck_amount(amount)
-        if "latest" in data:
-            claim_data = data["latest"]
-            amount = claim_data["amount"]
-            rank = claim_data["rank"]
-            self.client.status.set_claim(amount, rank)
+        actions = {
+            "amount": lambda amount: self.client.status.set_gamedeck_amount(amount),
+            "latest": lambda claim: self.client.status.set_claim(claim["amount"], claim["rank"]),
+            "display": lambda cards: self.client.status.set_display(cards),
+            "duration": lambda duration: self.client.status.set_duration(duration),
+            "turn": lambda turn: self.client.status.set_turn(turn),
+        }
 
-        if "display" in data:
-            cards = data["display"]
-            self.client.status.set_display(cards)
-
-        if "turn" in data:
-            turn = data["turn"]
-            self.client.status.set_turn(turn)
+        for key in data:
+            actions[key](data[key])
 
     def opponent_event(self, data: dict):
         """
@@ -123,18 +117,12 @@ class EventHandler:
         Handle player events
         :param data: dict
         """
-        if "cards" in data:
-            cards = data["cards"]
-            self.client.status.set_hand_cards(cards)
+        self.client.status.set_hand_cards(data["cards"])
 
     def claimgrid_event(self, data: dict):
         """
         Handle claimgrid events
         :param data: dict
         """
-        if "allowed" in data:
-            allowed = data["allowed"]
-            self.client.status.set_allowed_claims(allowed)
-        if "denied" in data:
-            denied = data["denied"]
-            self.client.status.set_denied_claims(denied)
+        self.client.status.set_allowed_claims(data["allowed"])
+        self.client.status.set_denied_claims(data["denied"])

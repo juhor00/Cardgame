@@ -48,6 +48,7 @@ class Status:
         self.allowed_claims = []
         self.denied_claims = []
         self.turn = None
+        self.duration = None
 
     def __str__(self):
         return str(vars(self))
@@ -254,6 +255,9 @@ class Status:
 
     def is_in_turn(self):
         return self.turn
+
+    def set_duration(self, duration):
+        self.duration = duration
 
 
 class Changes:
