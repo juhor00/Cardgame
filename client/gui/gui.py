@@ -129,11 +129,14 @@ class Gui(Tk):
 
             if len(self.gamewindow.play_cards.get_cards()) > 1:
                 # Disable 2, 10 and Ace because they can be only played 1 at a time
-                disable = [2, 10, 14]
-                denied = set(self.status.get_denied_claims())
-                denied = denied.intersection(disable)
-                self.status.set_denied_claims(denied)
-                self.gamewindow.claimgrid.disable_buttons(disable, temp=True)
+                denied_new = {"2": 9, "10": 9, "14": 9}
+
+                denied = self.status.get_denied_claims()
+                denied_new.update(denied)
+                print(denied_new)
+
+                self.status.set_denied_claims(denied_new)
+                self.gamewindow.claimgrid.disable_buttons(denied_new, temp=True)
 
     def on_play_click(self, event):
         if self.status.is_in_turn():

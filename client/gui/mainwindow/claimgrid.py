@@ -119,6 +119,7 @@ class ClaimButton(Button):
             6: "Ace can only be played if last played is Jack or higher",
             7: "Court cards can only be played if last played is 7 or higher",
             8: "Not allowed when it is not your turn",
+            9: "2, 10 or Ace can't be played when over 1 card is selected"
             }
 
         self.popup = ToolTip(self)
