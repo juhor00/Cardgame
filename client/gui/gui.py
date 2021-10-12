@@ -58,8 +58,8 @@ class Gui(Tk):
             "play_cards_remove": lambda cards: self.gamewindow.play_cards.remove_cards(cards),
             "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
             "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
-            "turn": lambda value: self.gamewindow.turn.set_turn(self.status.get_uid(), value),
-            "duration": lambda value: print(value)
+            "turn": lambda turn: self.gamewindow.turn.set_turn(self.status.get_uid(), turn),
+            "duration": lambda duration: self.gamewindow.claim.start_flicker(duration),
         }
 
     def update_status(self, status):
@@ -67,6 +67,7 @@ class Gui(Tk):
         Update Gui status
         :param status: Status
         """
+        self.status.set_duration(None)
         changes = status.compare(self.status)
         print("GUI changes:", changes)
         print("GUI status:", status)
@@ -78,6 +79,8 @@ class Gui(Tk):
         attributes = changes.get_attributes()
         for attribute in attributes:
             value = attributes[attribute]
+            if attribute == "duration":
+                print(attribute, value)
             self.update_types[attribute](value)
 
     def render_gamewindow(self):

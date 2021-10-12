@@ -184,7 +184,7 @@ class EventHandler:
         # Claim data
         claim_rank = self.game.gamedeck.get_last_rank()
         claim_amount = self.game.gamedeck.get_last_amount()
-        claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank}}}
+        claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank}, "duration": None}}
         self.sendall(claim_data)
 
         # Turn
@@ -336,7 +336,7 @@ class EventHandler:
         """
         print(f"Waiting {wait} seconds for displaying")
         sleep(wait)
-        self.sendall({"game": {"display": []}})
+        self.sendall({"game": {"display": [], "duration": None}})
         self.displaying = False
         self.broadcast_game()
 
