@@ -61,8 +61,6 @@ class Claim(Frame):
             del widget
 
 
-
-
 if __name__ == '__main__':
     root = Tk()
     claim = Claim(root)

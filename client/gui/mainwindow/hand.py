@@ -61,8 +61,6 @@ class Hand(Frame):
         card.config(command=lambda: self.on_click(card))
         card.bind("<MouseWheel>", self.on_scroll)
         self.cards.append(card)
-        if len(self.cards) == 1:
-            self.lift()
 
     def add_cards(self, cards):
         """
