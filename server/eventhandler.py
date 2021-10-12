@@ -10,6 +10,8 @@ def new_thread(target, daemon=True, args=()):
     thread.start()
 
 
+WAIT_DURATION = 5
+
 class EventHandler:
 
     def __init__(self, server):
@@ -129,6 +131,7 @@ class EventHandler:
             if self.game.gamedeck.to_discard():
                 self.broadcast_game()
                 self.broadcast_pause()
+                self.broadcast_discard(WAIT_DURATION)
                 new_thread(self.wait_for_discard)
             else:
                 self.broadcast_game()
@@ -137,11 +140,10 @@ class EventHandler:
             player = self.get_player(client)
             if self.game.can_suspect(player):
                 self.broadcast_pause()
-                duration = 5
-                self.broadcast_played_cards(duration)
+                self.broadcast_played_cards()
                 self.game.suspect(player)
                 self.displaying = True
-                new_thread(lambda: self.wait_for_display(duration))
+                new_thread(lambda: self.wait_for_display(wait=WAIT_DURATION))
 
     def broadcast_lobby(self):
         """
@@ -255,15 +257,14 @@ class EventHandler:
 
         self.sendall({"claimgrid": {"allowed": allowed, "denied": denied}})
 
-    def broadcast_played_cards(self, duration):
+    def broadcast_played_cards(self):
         """
-        Broadcasts last played cards and duration
-        :param duration: int, seconds
+        Broadcasts last played cards
         """
         all_cards = self.game.gamedeck.get_cards()
         amount = self.game.gamedeck.get_last_amount()
         cards = all_cards[-amount:]
-        self.sendall({"game": {"display": cards, "duration": duration}})
+        self.sendall({"game": {"display": cards}})
 
     def broadcast_allowed_claims(self):
         """
@@ -280,6 +281,13 @@ class EventHandler:
                 for rank in range(2, 15):
                     denied[rank] = 8
             self.send(client, {"claimgrid": {"allowed": allowed, "denied": denied}})
+
+    def broadcast_discard(self, duration):
+        """
+        Broadcast game deck discard's wait duration
+        :param duration: float
+        """
+        self.sendall({"game": {"duration": duration}})
 
     def check_start(self):
         """
@@ -336,7 +344,7 @@ class EventHandler:
         """
         print(f"Waiting {wait} seconds for displaying")
         sleep(wait)
-        self.sendall({"game": {"display": [], "duration": None}})
+        self.sendall({"game": {"display": []}})
         self.displaying = False
         self.broadcast_game()
 

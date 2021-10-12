@@ -1,5 +1,5 @@
 from tkinter import *
-from time import sleep, time
+from time import sleep
 from threading import Thread
 
 
@@ -11,12 +11,6 @@ def find_ratio(a, s):
     :return: float, ratio
     """
     return -((a / s) - 1)
-
-def after(seconds, function):
-    sleep(seconds)
-    function()
-    print("Stopped")
-
 
 class ClaimText(Label):
     """
@@ -82,11 +76,10 @@ class Claim(Frame):
             del widget
 
     def start_flicker(self, duration):
-        print("START FLICKERRRRRRRRRRRRRRR")
         self.flickering = True
         self.start_interval = duration * 0.1 if duration * 0.1 < self.start_interval else self.start_interval
         self.ratio = find_ratio(self.start_interval-self.stop_interval, duration)
-        Thread(target=lambda: self.flicker(self.start_interval)).start()
+        Thread(target=lambda: self.flicker(self.start_interval), daemon=True).start()
 
     def stop_flicker(self):
         self.flickering = False
@@ -96,7 +89,6 @@ class Claim(Frame):
             self.change_to_white()
             return
         if interval < self.stop_interval:
-            self.ratio = None
             self.change_to_white()
             return
         self.change_color()
@@ -113,17 +105,3 @@ class Claim(Frame):
     def change_to_white(self):
         for widget in self.widgets:
             widget.config(bg="white")
-
-    def __del__(self):
-        self.flickering_interval = None
-
-
-if __name__ == '__main__':
-
-    root = Tk()
-    claim = Claim(root)
-    claim.pack()
-    claim.new(3, "A")
-    claim.start_flicker(8)
-    Thread(target=lambda: after(3, claim.stop_flicker), daemon=True).start()
-    claim.mainloop()

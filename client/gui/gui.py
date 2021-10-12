@@ -55,7 +55,7 @@ class Gui(Tk):
             "hand_cards_add": lambda cards: self.gamewindow.hand.add_cards(cards),
             "hand_cards_remove": lambda cards: self.gamewindow.hand.remove_cards(cards),
             "play_cards_add": lambda cards: self.gamewindow.play_cards.add_cards(cards),
-            "play_cards_remove": lambda cards: self.gamewindow.play_cards.remove_cards(cards),
+            "play_cards_remove": lambda cards: self.remove_play_cards(cards),
             "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
             "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
             "turn": lambda turn: self.gamewindow.turn.set_turn(self.status.get_uid(), turn),
@@ -67,7 +67,6 @@ class Gui(Tk):
         Update Gui status
         :param status: Status
         """
-        self.status.set_duration(None)
         changes = status.compare(self.status)
         print("GUI changes:", changes)
         print("GUI status:", status)
@@ -208,9 +207,14 @@ class Gui(Tk):
         self.status.set_hand_cards(hand_cards)
 
     def add_display(self, cards):
+        self.gamewindow.claim.stop_flicker()
         self.gamewindow.play_cards.add_cards(cards)
         self.gamewindow.lift_play_cards()
 
     def remove_display(self, cards):
         self.gamewindow.play_cards.remove_cards(cards)
         self.gamewindow.lower_play_cards()
+
+    def remove_play_cards(self, cards):
+        self.gamewindow.play_cards.remove_cards(cards)
+        self.gamewindow.claim.stop_flicker()
