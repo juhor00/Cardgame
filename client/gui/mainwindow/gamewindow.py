@@ -30,7 +30,6 @@ class GameWindow(Frame):
 
         self.hand = Hand(self)
         self.play_cards = Hand(self)
-        self.turn = TurnList(self)
         self.deck = InteractPile(self, "Deck")
         self.gamedeck = InteractPile(self, "Game")
         self.claimgrid = ClaimGrid(self)
@@ -49,7 +48,6 @@ class GameWindow(Frame):
         self.hand.place(x=270, y=480)
         self.claimgrid.place(x=870, y=530)
         self.claim.place(x=680, y=220)
-        self.turn.place(x=1060, y=240)
         self.opponents.place(x=0, y=4)
         self.play_cards.place(x=270, y=230)
 
@@ -69,18 +67,16 @@ class GameWindow(Frame):
         self.gamedeck.lift()
         self.claim.lift()
 
-    def modify_opponent(self, uid, turn, amount, name):
+    def modify_opponent(self, uid, name, amount, turn):
         """
         Modify opponent info
         :param uid: int
-        :param turn: bool
-        :param amount: int
         :param name: str
+        :param amount: int
+        :param turn: bool
         """
         self.opponents.set_name(uid, name)
         self.opponents.set_amount(uid, amount)
-        self.turn.set_turn(uid, turn)
-        self.turn.set_name(uid, name)
 
     def add_opponent(self, uid, name, amount, turn):
         """
@@ -91,4 +87,3 @@ class GameWindow(Frame):
         :param turn: bool
         """
         self.opponents.add(uid, name, amount)
-        self.turn.add(uid, name, turn)

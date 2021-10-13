@@ -40,7 +40,6 @@ class Gui(Tk):
         self.render_lobby()
         self.is_fullscreen = False
         self.set_binds()
-        self.gamewindow.turn.add(self.status.get_uid(), "You", self.status.is_in_turn())
 
         self.update_types = {
             "in_lobby": lambda value: self.render_lobby() if value else self.render_gamewindow(),
@@ -58,7 +57,7 @@ class Gui(Tk):
             "play_cards_remove": lambda cards: self.remove_play_cards(cards),
             "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
             "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
-            "turn": lambda turn: self.gamewindow.turn.set_turn(self.status.get_uid(), turn),
+            "turn": lambda turn: None,
             "duration": lambda duration: self.gamewindow.claim.start_flicker(duration),
         }
 
@@ -122,6 +121,10 @@ class Gui(Tk):
         bind_event_data(self.gamewindow.play_cards, "<<Card-clicked>>", self.on_play_click)
 
     def on_hand_click(self, event):
+        """
+        Action when hand cards clicked
+        :param event: tkinter event
+        """
         if self.status.is_in_turn():
             if len(self.gamewindow.play_cards.get_cards()) >= 4:
                 return
@@ -136,15 +139,19 @@ class Gui(Tk):
 
                 denied = self.status.get_denied_claims()
                 denied_new.update(denied)
-                print(denied_new)
 
                 self.status.set_denied_claims(denied_new)
                 self.gamewindow.claimgrid.disable_buttons(denied_new, temp=True)
 
+        # Show play cards
         if not self.gamewindow.play_cards.is_empty():
             self.gamewindow.lift_play_cards()
 
     def on_play_click(self, event):
+        """
+        Action when play cards clicked
+        :param event: tkinter event
+        """
         if self.status.is_in_turn():
             card = event.data["content"]
             self.gamewindow.play_cards.remove_cards([card])
@@ -160,6 +167,8 @@ class Gui(Tk):
 
                 self.status.set_allowed_claims(list(allowed))
                 self.gamewindow.claimgrid.enable_buttons(list(enable), temp=True)
+
+        # Show deck
         if self.gamewindow.play_cards.is_empty():
             self.gamewindow.lower_play_cards()
 
@@ -175,7 +184,7 @@ class Gui(Tk):
                 turn = opponent.is_in_turn()
                 name = opponent.get_name()
 
-                self.gamewindow.modify_opponent(uid, turn, amount, name)
+                self.gamewindow.modify_opponent(uid, name, amount, turn)
 
     def add_opponents(self, opponents):
 
@@ -191,10 +200,10 @@ class Gui(Tk):
                 name = "You"
             self.gamewindow.add_opponent(uid, name, amount, turn)
 
-    def remove_opponents(self, _):
+    def remove_opponents(self, opponents):
         """
         Ignore opponents to remove and refresh all with current status info
-        :param _: opponents, ignored
+        :param opponents:
         """
         if self.status.is_in_lobby():
             self.lobby.remove_all_and_add_opponents(self.status.get_opponents())
