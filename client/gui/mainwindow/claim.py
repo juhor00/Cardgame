@@ -48,6 +48,9 @@ class Claim(Frame):
         super().__init__(parent, bg="#35654d")
         self.parent = parent
 
+        self.content = Frame(self, bg=self["bg"])
+        self.content.pack()
+
         self.placement = {
             1: lambda label, count: label.grid(),
             2: lambda label, count: label.grid(column=count, row=0),
@@ -64,8 +67,10 @@ class Claim(Frame):
 
         self.reset()
 
+        self.content.pack(pady=50 if amount <= 2 else 0)
+
         for count in range(amount):
-            label = Label(self, text=self.int_to_rank(rank), bg="white", font=("Helvetica", 36), width=2, height=2)
+            label = Label(self.content, text=self.int_to_rank(rank), bg="white", font=("Helvetica", 36), width=2, height=2)
             self.placement[amount](label, count)
             label.grid_configure(padx=4, pady=4)
             self.widgets.append(label)
