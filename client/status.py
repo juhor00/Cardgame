@@ -190,6 +190,14 @@ class Status:
         opponent = self.get_opponent(uid)
         opponent.set_turn(turn)
 
+    def set_opponent_played(self, uid, played):
+        opponent = self.get_opponent(uid)
+        opponent.set_played(played)
+
+    def set_opponent_suspected(self, uid, suspected):
+        opponent = self.get_opponent(uid)
+        opponent.set_suspected(suspected)
+
     def set_deck_amount(self, amount):
         self.deck_amount = amount
 
@@ -294,6 +302,8 @@ class Opponent:
         self.ready = None
         self.card_amount = 0
         self.turn = None
+        self.played = None
+        self.suspected = None
 
     def __eq__(self, other: 'Opponent'):
         if self.get_uid() != other.get_uid():
@@ -305,6 +315,10 @@ class Opponent:
         if self.get_card_amount() != other.get_card_amount():
             return False
         if self.is_in_turn() != other.is_in_turn():
+            return False
+        if self.has_played() != other.has_played():
+            return False
+        if self.has_suspected() != other.has_suspected():
             return False
         return True
 
@@ -337,3 +351,15 @@ class Opponent:
 
     def is_in_turn(self):
         return self.turn
+
+    def set_played(self, played: bool):
+        self.played = played
+
+    def has_played(self):
+        return self.played
+
+    def set_suspected(self, suspected: bool):
+        self.suspected = suspected
+
+    def has_suspected(self):
+        return self.suspected
