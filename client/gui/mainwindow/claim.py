@@ -66,7 +66,6 @@ class Claim(Frame):
 
         self.reset()
         self.content = Frame(self, bg=self["bg"])
-        self.content.config(bg="blue")
         self.content.pack(pady=50 if amount <= 2 else 0)
 
         for count in range(amount):
