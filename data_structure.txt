@@ -19,6 +19,7 @@ FROM SERVER
 "player":
 	{
 	"cards":    [ (str) <card> ...]
+	"turn":     (bool) <state>  # Client's turn
 	},
 
 "opponents":
@@ -26,6 +27,7 @@ FROM SERVER
 		{
 		"amount": 	(int) <amount>
 		"name":     (str) <name>
+		"turn":     (bool) <state>
 		"won": 		(bool) <state>
 		"lost": 	(bool) <state>
 		}
@@ -49,7 +51,6 @@ FROM SERVER
 		"cards":	[ (str) <card> ...]
 		"lied":		(bool) <state>
 		}
-	"turn":     (bool) <state>  # Client's turn
 	"display":  [   (str) <card> ...]   # Play cards that can't be removed
 	"duration": (int) <time>    # How long display is on
 	},
@@ -58,13 +59,6 @@ FROM SERVER
 	"allowed": 	[ (int) <rank> ...]
 	denied: 	{(int) <rank>: (int) <reason>, ...}
 	},
-"turnlist":
-    [
-        {
-        "uid":      (int) <uid>
-        "turn":    (bool) <state>
-        }
-    ]
 }
 
 CLIENT TO SERVER
