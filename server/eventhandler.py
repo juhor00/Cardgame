@@ -217,7 +217,7 @@ class EventHandler:
                     played = self.game.last_played_player == player
 
                     opponents.append({"amount": amount, "name": player.get_name(), "uid": opponent_uid, "turn": turn,
-                                      "played": played})
+                                      "played": played, "suspected": False})
 
             opponent_data = {"opponents": opponents}
             self.send(client, opponent_data)

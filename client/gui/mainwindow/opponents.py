@@ -91,11 +91,16 @@ class Opponent(CardPile):
     def __init__(self, parent, name):
         super().__init__(parent, name=name)
 
-        self.indicator_label = Label(self)
+        self.indicator_label = Label(self, bg="#35654d")
         self.indicator_label.place(x=90, y=190)
-        self.played, self.suspected, self.turn = self.get_images()
+        self.played_img, self.suspected_img, self.turn_img = self.get_images()
 
-    def get_images(self):
+        self.played = False
+        self.suspected = False
+        self.turn = False
+
+    @staticmethod
+    def get_images():
         """
         Add images as indicator label's attributes
         :return 3 Images
@@ -107,22 +112,33 @@ class Opponent(CardPile):
         return ImageTk.PhotoImage(played), ImageTk.PhotoImage(suspected), ImageTk.PhotoImage(turn)
 
     def set_turn(self, turn):
-        image = self.turn if turn else None
-        if not image:
-            if not self.indicator_label["image"] == self.turn:
-                return
-        self.indicator_label.config(image=image)
+
+        color = "lightgreen" if turn else "white"
+        self.name_label.config(fg=color)
+        self.amount_label.config(fg=color)
+
+        self.turn = turn
+        self.set_image()
 
     def set_played(self, played):
-        image = self.played if played else None
-        if not image:
-            if not self.indicator_label["image"] == self.played:
-                return
-        self.indicator_label.config(image=image)
+        self.played = played
+        self.set_image()
 
     def set_suspected(self, suspected):
-        image = self.suspected if suspected else None
-        if not image:
-            if not self.indicator_label["image"] == self.suspected:
-                return
+        self.suspected = suspected
+        self.set_image()
+
+    def set_image(self):
+        """
+        Set image based on status
+        """
+        if self.suspected:
+            image = self.suspected_img
+        elif self.turn:
+            image = self.turn_img
+        elif self.played:
+            image = self.played_img
+        else:
+            image = ''
+        print("Image:", image)
         self.indicator_label.config(image=image)

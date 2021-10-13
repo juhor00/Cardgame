@@ -68,7 +68,6 @@ class Gui(Tk):
         """
         changes = status.compare(self.status)
         print("GUI changes:", changes)
-        print("GUI status:", status)
         self.status = status
         self.apply_changes(changes)
 

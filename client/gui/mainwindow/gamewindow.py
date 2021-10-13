@@ -79,8 +79,8 @@ class GameWindow(Frame):
         """
         self.opponents.set_name(uid, name)
         self.opponents.set_amount(uid, amount)
-        self.opponents.set_turn(uid, turn)
         self.opponents.set_played(uid, played)
+        self.opponents.set_turn(uid, turn)
         self.opponents.set_suspected(uid, suspected)
 
     def add_opponent(self, uid, name, amount, turn):

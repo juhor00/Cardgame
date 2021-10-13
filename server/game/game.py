@@ -18,7 +18,7 @@ class Game:
         self.deck = Deck()
         self.gamedeck = GameDeck()
         self.turnmanager = TurnManager(players)
-        self.last_played_player = self.turnmanager.get_active_player()
+        self.last_played_player = None
 
     def start(self):
         """
@@ -84,8 +84,9 @@ class Game:
                 return False
 
         # Player who played last won
-        if self.last_played_player.hand.is_empty():
-            print(self.last_played_player, "won!")
+        if self.last_played_player is not None:
+            if self.last_played_player.hand.is_empty():
+                print(self.last_played_player, "won!")
 
         # Play cards
         self.gamedeck.add_multiple(cards)
