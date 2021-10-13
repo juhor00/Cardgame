@@ -67,6 +67,19 @@ class TurnManager:
 
         return players
 
+    def get_opponents(self, player):
+        """
+        Return list of all opponents of player
+        :param player: Player
+        :return: list, Player
+        """
+        players = self.get_players()
+        opponents = []
+        for other in players:
+            if not other == player:
+                opponents.append(other)
+        return opponents
+
     def get_names(self):
         """
         Return list of all player names
