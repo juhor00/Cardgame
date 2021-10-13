@@ -141,10 +141,11 @@ class EventHandler:
         if "suspect" in data:
             player = self.get_player(client)
             if self.game.can_suspect(player):
-
+                self.displaying = True
+                self.broadcast_pause()
+                self.broadcast_played_cards()
                 self.broadcast_suspect(player)
                 self.game.suspect(player)
-                self.displaying = True
                 new_thread(lambda: self.wait_for_display(wait=DISPLAY_DURATION))
 
     def broadcast_lobby(self):
@@ -295,8 +296,6 @@ class EventHandler:
         Broadcast suspect events
         :param player_who_suspects: Player
         """
-        self.broadcast_pause()
-        self.broadcast_played_cards()
 
         for client in self.clients:
             player = self.game.turnmanager.get_player(client.get_uid())
