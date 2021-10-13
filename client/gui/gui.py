@@ -76,8 +76,6 @@ class Gui(Tk):
         attributes = changes.get_attributes()
         for attribute in attributes:
             value = attributes[attribute]
-            if attribute == "duration":
-                print(attribute, value)
             self.update_types[attribute](value)
 
     def render_gamewindow(self):

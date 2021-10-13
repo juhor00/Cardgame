@@ -20,7 +20,6 @@ class ClaimGrid(Frame):
         Creates a virtual signal
         :param button: Button
         """
-        print("Reason: ", button.get_reason())
         rank = OpenedCard.rank_to_int(button["text"])
         self.event_generate("<<Button-clicked>>", data={"content": rank})
 

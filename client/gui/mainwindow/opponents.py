@@ -140,5 +140,4 @@ class Opponent(CardPile):
             image = self.played_img
         else:
             image = ''
-        print("Image:", image)
         self.indicator_label.config(image=image)
