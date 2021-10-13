@@ -108,7 +108,7 @@ class EventHandler:
         actions = {
             "amount": lambda amount: self.client.status.set_opponent_amount(uid, amount),
             "turn": lambda turn: self.client.status.set_opponent_turn(uid, turn),
-            "name": lambda name: None,
+            "name": lambda name: self.client.status.set_opponent_name(uid, name),
             "played": lambda played: self.client.status.set_opponent_played(uid, played),
             "suspected": lambda suspected: self.client.status.set_opponent_suspected(uid, suspected),
         }

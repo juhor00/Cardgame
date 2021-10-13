@@ -173,6 +173,10 @@ class Status:
         opponent = self.get_opponent(uid)
         self.opponents.remove(opponent)
 
+    def set_opponent_name(self, uid, name):
+        opponent = self.get_opponent(uid)
+        opponent.set_name(name)
+
     def set_opponent_status(self, uid, status):
         """
         Set lobby ready status
