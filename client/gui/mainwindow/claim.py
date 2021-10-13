@@ -65,7 +65,7 @@ class Claim(Frame):
         self.reset()
 
         for count in range(amount):
-            label = Label(self, text=rank, bg="white", font=("Helvetica", 36), width=2, height=2)
+            label = Label(self, text=self.int_to_rank(rank), bg="white", font=("Helvetica", 36), width=2, height=2)
             self.placement[amount](label, count)
             label.grid_configure(padx=4, pady=4)
             self.widgets.append(label)
@@ -105,3 +105,22 @@ class Claim(Frame):
     def change_to_white(self):
         for widget in self.widgets:
             widget.config(bg="white")
+
+    @staticmethod
+    def int_to_rank(num):
+        """
+        Return rank according to given number
+        :param num: int
+        :return: str
+        """
+
+        ranks = {
+            11: "J",
+            12: "Q",
+            13: "K",
+            14: "A",
+        }
+        if num in ranks:
+            return ranks[num]
+        else:
+            return str(num)
