@@ -56,7 +56,7 @@ class Claim(Frame):
         }
         self.widgets = []
         self.start_interval = 2
-        self.stop_interval = 0.4
+        self.stop_interval = 0.15
         self.ratio = None
         self.flickering = False
 

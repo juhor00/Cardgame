@@ -10,7 +10,8 @@ def new_thread(target, daemon=True, args=()):
     thread.start()
 
 
-WAIT_DURATION = 5
+WAIT_DURATION = 8
+
 
 class EventHandler:
 
@@ -132,7 +133,7 @@ class EventHandler:
                 self.broadcast_game()
                 self.broadcast_pause()
                 self.broadcast_discard(WAIT_DURATION)
-                new_thread(self.wait_for_discard)
+                new_thread(lambda: self.wait_for_discard(wait=WAIT_DURATION))
             else:
                 self.broadcast_game()
 
@@ -321,7 +322,7 @@ class EventHandler:
         """
         return self.game.turnmanager.get_player(client.get_uid())
 
-    def wait_for_discard(self, wait=5):
+    def wait_for_discard(self, wait):
         """
         Start discard waiting (ONLY CALL IN A THREAD)
         Calls discard method after waiting
