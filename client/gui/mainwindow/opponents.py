@@ -1,4 +1,5 @@
 from tkinter import *
+from PIL import Image, ImageTk
 
 try:
     from .cardpile import CardPile
@@ -23,7 +24,7 @@ class Opponents(Frame):
         :param name: str
         :param amount: int
         """
-        opponent = CardPile(self, name=name)
+        opponent = Opponent(self, name=name)
         opponent.set_amount(amount)
         self.opponents[uid] = opponent
         self.draw()
@@ -49,6 +50,18 @@ class Opponents(Frame):
         opponent = self.get_opponent(uid)
         opponent.set_name(name)
 
+    def set_turn(self, uid, turn):
+        opponent = self.get_opponent(uid)
+        opponent.set_turn(turn)
+
+    def set_played(self, uid, played):
+        opponent = self.get_opponent(uid)
+        opponent.set_played(played)
+
+    def set_suspected(self, uid, suspected):
+        opponent = self.get_opponent(uid)
+        opponent.set_suspected(suspected)
+
     def get_opponent(self, uid):
         return self.opponents[uid]
 
@@ -71,3 +84,45 @@ class Opponents(Frame):
             opponent = self.opponents[uid]
             x = first_coordinate + (index * (offset + pile_width))
             opponent.place(x=x, y=0)
+
+
+class Opponent(CardPile):
+
+    def __init__(self, parent, name):
+        super().__init__(parent, name=name)
+
+        self.indicator_label = Label(self)
+        self.indicator_label.place(x=90, y=190)
+        self.played, self.suspected, self.turn = self.get_images()
+
+    def get_images(self):
+        """
+        Add images as indicator label's attributes
+        :return 3 Images
+        """
+        played = Image.open("gui/mainwindow/assets/spades.png")
+        suspected = Image.open("gui/mainwindow/assets/questionmark.png")
+        turn = Image.open("gui/mainwindow/assets/turn_arrow.png")
+
+        return ImageTk.PhotoImage(played), ImageTk.PhotoImage(suspected), ImageTk.PhotoImage(turn)
+
+    def set_turn(self, turn):
+        image = self.turn if turn else None
+        if not image:
+            if not self.indicator_label["image"] == self.turn:
+                return
+        self.indicator_label.config(image=image)
+
+    def set_played(self, played):
+        image = self.played if played else None
+        if not image:
+            if not self.indicator_label["image"] == self.played:
+                return
+        self.indicator_label.config(image=image)
+
+    def set_suspected(self, suspected):
+        image = self.suspected if suspected else None
+        if not image:
+            if not self.indicator_label["image"] == self.suspected:
+                return
+        self.indicator_label.config(image=image)

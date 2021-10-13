@@ -67,16 +67,21 @@ class GameWindow(Frame):
         self.gamedeck.lift()
         self.claim.lift()
 
-    def modify_opponent(self, uid, name, amount, turn):
+    def modify_opponent(self, uid, name, amount, turn, played, suspected):
         """
         Modify opponent info
         :param uid: int
         :param name: str
         :param amount: int
         :param turn: bool
+        :param played: bool
+        :param suspected: bool
         """
         self.opponents.set_name(uid, name)
         self.opponents.set_amount(uid, amount)
+        self.opponents.set_turn(uid, turn)
+        self.opponents.set_played(uid, played)
+        self.opponents.set_suspected(uid, suspected)
 
     def add_opponent(self, uid, name, amount, turn):
         """
@@ -87,3 +92,4 @@ class GameWindow(Frame):
         :param turn: bool
         """
         self.opponents.add(uid, name, amount)
+        self.opponents.set_turn(uid, turn)

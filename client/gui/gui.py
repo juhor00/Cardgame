@@ -183,8 +183,10 @@ class Gui(Tk):
                 amount = opponent.get_card_amount()
                 turn = opponent.is_in_turn()
                 name = opponent.get_name()
+                played = opponent.has_played()
+                suspected = opponent.has_suspected()
 
-                self.gamewindow.modify_opponent(uid, name, amount, turn)
+                self.gamewindow.modify_opponent(uid, name, amount, turn, played, suspected)
 
     def add_opponents(self, opponents):
 
