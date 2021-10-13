@@ -10,7 +10,8 @@ def new_thread(target, daemon=True, args=()):
     thread.start()
 
 
-WAIT_DURATION = 8
+DISCARD_DURATION = 8
+DISPLAY_DURATION = 5
 
 
 class EventHandler:
@@ -132,19 +133,19 @@ class EventHandler:
             if self.game.gamedeck.to_discard():
                 self.broadcast_game()
                 self.broadcast_pause()
-                self.broadcast_discard(WAIT_DURATION)
-                new_thread(lambda: self.wait_for_discard(wait=WAIT_DURATION))
+                self.broadcast_discard(DISCARD_DURATION)
+                new_thread(lambda: self.wait_for_discard(wait=DISCARD_DURATION))
             else:
                 self.broadcast_game()
 
         if "suspect" in data:
             player = self.get_player(client)
             if self.game.can_suspect(player):
-                self.broadcast_pause()
-                self.broadcast_played_cards()
+
+                self.broadcast_suspect(player)
                 self.game.suspect(player)
                 self.displaying = True
-                new_thread(lambda: self.wait_for_display(wait=WAIT_DURATION))
+                new_thread(lambda: self.wait_for_display(wait=DISPLAY_DURATION))
 
     def broadcast_lobby(self):
         """
@@ -213,7 +214,10 @@ class EventHandler:
                     player = self.game.turnmanager.get_player(opponent_uid)
                     amount = player.hand.get_amount()
                     turn = self.game.turnmanager.is_in_turn(player) or self.game.turnmanager.is_first_round()
-                    opponents.append({"amount": amount, "name": player.get_name(), "uid": opponent_uid, "turn": turn})
+                    played = self.game.last_played_player == player
+
+                    opponents.append({"amount": amount, "name": player.get_name(), "uid": opponent_uid, "turn": turn,
+                                      "played": played})
 
             opponent_data = {"opponents": opponents}
             self.send(client, opponent_data)
@@ -285,6 +289,25 @@ class EventHandler:
         :param duration: float
         """
         self.sendall({"game": {"duration": duration}})
+
+    def broadcast_suspect(self, player_who_suspects):
+        """
+        Broadcast suspect events
+        :param player_who_suspects: Player
+        """
+        self.broadcast_pause()
+        self.broadcast_played_cards()
+
+        for client in self.clients:
+            player = self.game.turnmanager.get_player(client.get_uid())
+            opponents = self.game.turnmanager.get_opponents(player)
+
+            data = []
+            for opponent in opponents:
+                uid = opponent.get_uid()
+                suspected = opponent == player_who_suspects
+                data.append({"uid": uid, "suspected": suspected})
+            self.send(client, {"opponents": data})
 
     def check_start(self):
         """

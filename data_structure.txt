@@ -25,9 +25,12 @@ FROM SERVER
 "opponents":
 	[
 		{
+		"uid":      (int) <uid>
 		"amount": 	(int) <amount>
 		"name":     (str) <name>
 		"turn":     (bool) <state>
+		"played":   (bool) <state>
+		"suspected": (bool) <state>
 		"won": 		(bool) <state>
 		"lost": 	(bool) <state>
 		}
