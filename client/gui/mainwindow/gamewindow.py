@@ -43,13 +43,13 @@ class GameWindow(Frame):
         """
         Places widgets on frame
         """
-        self.deck.place(x=80, y=220)
-        self.gamedeck.place(x=500, y=220)
-        self.hand.place(x=270, y=480)
+        self.deck.place(x=100, y=220)
+        self.gamedeck.place(x=576, y=220)
+        self.hand.place(x=348, y=480)
         self.claimgrid.place(x=870, y=530)
-        self.claim.place(x=680, y=220)
+        self.claim.place(x=756, y=220)
         self.opponents.place(x=0, y=4)
-        self.play_cards.place(x=270, y=230)
+        self.play_cards.place(x=348, y=230)
 
     def lift_play_cards(self):
         """

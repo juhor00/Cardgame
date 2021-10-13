@@ -48,8 +48,7 @@ class Claim(Frame):
         super().__init__(parent, bg="#35654d")
         self.parent = parent
 
-        self.content = Frame(self, bg=self["bg"])
-        self.content.pack()
+        self.content = None
 
         self.placement = {
             1: lambda label, count: label.grid(),
@@ -66,7 +65,8 @@ class Claim(Frame):
     def new(self, amount, rank):
 
         self.reset()
-
+        self.content = Frame(self, bg=self["bg"])
+        self.content.config(bg="blue")
         self.content.pack(pady=50 if amount <= 2 else 0)
 
         for count in range(amount):
@@ -76,9 +76,9 @@ class Claim(Frame):
             self.widgets.append(label)
 
     def reset(self):
-        for widget in self.widgets:
-            widget.grid_forget()
-            del widget
+        if self.content:
+            self.widgets = []
+            self.content.destroy()
 
     def start_flicker(self, duration):
         self.flickering = True
