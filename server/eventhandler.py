@@ -305,8 +305,9 @@ class EventHandler:
             for opponent in opponents:
                 uid = opponent.get_uid()
                 suspected = opponent == player_who_suspects
-                data.append({"uid": uid, "suspected": suspected})
+                data.append({"uid": uid, "suspected": suspected, "turn": False})
             self.send(client, {"opponents": data})
+            self.send(client, {"player": {"turn": False}})
 
     def check_start(self):
         """
