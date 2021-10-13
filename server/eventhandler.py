@@ -164,7 +164,6 @@ class EventHandler:
         - Deck
         - Gamedeck
         - Claimed
-        - Turn
         - Players' cards, turn
         """
         if self.in_lobby:
@@ -189,9 +188,6 @@ class EventHandler:
         claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank}, "duration": None}}
         self.sendall(claim_data)
 
-        # Turn
-        self.broadcast_turn()
-
         # Player data
         self.broadcast_player_data()
 
@@ -201,6 +197,10 @@ class EventHandler:
     def broadcast_opponent_data(self):
         """
         Send opponent data to each player
+        - Name
+        - UID
+        - Card amount
+        - Turn
         """
         for client in self.clients:
             uid = client.get_uid()
@@ -211,45 +211,41 @@ class EventHandler:
                 if opponent_uid != uid:
                     player = self.game.turnmanager.get_player(opponent_uid)
                     amount = player.hand.get_amount()
-                    opponents.append({"amount": amount, "name": player.get_name(), "uid": opponent_uid})
+                    turn = self.game.turnmanager.is_in_turn(player) or self.game.turnmanager.is_first_round()
+                    opponents.append({"amount": amount, "name": player.get_name(), "uid": opponent_uid, "turn": turn})
 
             opponent_data = {"opponents": opponents}
             self.send(client, opponent_data)
 
     def broadcast_player_data(self):
         """
-        Broadcast personal data to each player
+        Broadcast each player info
+        - Cards
+        - Turn
         """
         for client in self.clients:
             player = self.game.turnmanager.get_player(client.get_uid())
             cards = player.hand.get_cards()
-            player_data = {"player": {"cards": cards}}
+            turn = self.game.turnmanager.is_in_turn(player) or self.game.turnmanager.is_first_round()
+            player_data = {"player": {"cards": cards, "turn": turn}}
             self.send(client, player_data)
-
-    def broadcast_turn(self):
-        """
-        Broadcast player names to all clients
-        """
-        player_data = []
-        for player in self.game.turnmanager.get_players():
-            uid = player.get_uid()
-            turn = self.game.turnmanager.is_in_turn(player)
-            if self.game.turnmanager.is_first_round():
-                turn = True
-            player_data.append({"uid": uid, "turn": turn})
-        self.sendall({"turnlist": player_data})
 
     def broadcast_pause(self):
         """
         Broadcast info that pauses the game
         No one is in turn until broadcasted otherwise
         """
-        player_data = []
-        for player in self.game.turnmanager.get_players():
-            uid = player.get_uid()
-            turn = False
-            player_data.append({"uid": uid, "turn": turn})
-        self.sendall({"turnlist": player_data})
+        for client in self.clients:
+            uid = client.get_uid()
+            player = self.game.turnmanager.get_player(uid)
+            opponents = self.game.turnmanager.get_opponents(player)
+            opponent_data = []
+            for opponent in opponents:
+                opponent_uid = opponent.get_uid()
+                turn = False
+                opponent_data.append({"uid": opponent_uid, "turn": turn})
+                self.send(client, {"opponents": opponent_data})
+
         allowed = []
         denied = {}
         for rank in range(2, 15):

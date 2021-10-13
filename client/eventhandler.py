@@ -12,7 +12,6 @@ class EventHandler:
 
         self.event_types = {
             "lobby": lambda msg: self.lobby_event(msg),
-            "turnlist": lambda msg: self.turnlist_event(msg),
             "deck": lambda msg: self.deck_event(msg),
             "game": lambda msg: self.game_event(msg),
             "opponents": lambda msg: self.opponent_event(msg),
@@ -33,6 +32,10 @@ class EventHandler:
     def lobby_event(self, data: dict):
         """
         Handle lobby events
+        - Other players (by UID):
+            - Name
+            - Ready
+        - Start
         :param data: dict
         """
 
@@ -64,22 +67,10 @@ class EventHandler:
             if data["start"]:
                 self.client.status.set_lobby_status(False)
 
-    def turnlist_event(self, data: dict):
-        """
-        Handle turnlist events
-        :param data: dict
-        """
-        for player in data:
-            uid = player["uid"]
-            turn = player["turn"]
-            if uid == self.client.status.get_uid():
-                self.client.status.set_turn(turn)
-            else:
-                self.client.status.set_opponent_turn(uid, turn)
-
     def deck_event(self, data: dict):
         """
         Handle deck events
+        - Amount
         :param data: dict
         """
         if "amount" in data:
@@ -89,6 +80,11 @@ class EventHandler:
     def game_event(self, data: dict):
         """
         Handle game events
+        - Game Deck amount
+        - Latest claim
+        - Display (suspect cards shown)
+        - Duration (how long until deck is discarded)
+        - Turn
         :param data: dict
         """
         actions = {
@@ -104,24 +100,45 @@ class EventHandler:
 
     def opponent_event(self, data: dict):
         """
-        Handle opponent events
+        Handle opponent events (by UID)
+        - Amount
+        - Turn
         :param data: dict
         """
+        actions = {
+            "amount": lambda amount: self.client.status.set_opponent_amount(uid, amount),
+            "turn": lambda turn: self.client.status.set_opponent_turn(uid, turn),
+            "name": lambda name: None
+        }
         for opponent in data:
             uid = opponent["uid"]
-            amount = opponent["amount"]
-            self.client.status.set_opponent_amount(uid, amount)
+            opponent.pop("uid")
+            for key in opponent:
+                value = opponent[key]
+                actions[key](value)
 
     def player_event(self, data: dict):
         """
         Handle player events
+        - Cards
+        - Turn
         :param data: dict
         """
-        self.client.status.set_hand_cards(data["cards"])
+
+        actions = {
+            "cards": lambda cards: self.client.status.set_hand_cards(cards),
+            "turn": lambda turn: self.client.status.set_turn(turn),
+        }
+
+        for key in data:
+            value = data[key]
+            actions[key](value)
 
     def claimgrid_event(self, data: dict):
         """
         Handle claimgrid events
+        - Allowed
+        - Denied
         :param data: dict
         """
         self.client.status.set_allowed_claims(data["allowed"])
