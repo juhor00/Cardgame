@@ -56,6 +56,7 @@ class GameWindow(Frame):
         Places play cards on top of game deck
         """
         self.gamedeck.lower()
+        self.opponents.lower()
         self.play_cards.lift()
         self.claim.lift()
 
@@ -64,6 +65,7 @@ class GameWindow(Frame):
         Remove play cards and show game deck
         """
         self.play_cards.lower()
+        self.opponents.lower()
         self.gamedeck.lift()
         self.claim.lift()
 
