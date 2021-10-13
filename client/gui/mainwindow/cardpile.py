@@ -27,7 +27,7 @@ class CardPile(Frame):
         self.name_label = Label(self, text=name, font=("", 12), fg="white", bg="#35654d")
 
         self.amount_label.place(x=0, y=3 * pad + height + offset)
-        self.name_label.place(x=40, y=3 * pad + height + offset)
+        self.name_label.place(x=20, y=3 * pad + height + offset)
 
     def set_amount(self, amount):
         """

@@ -92,7 +92,7 @@ class Opponent(CardPile):
         super().__init__(parent, name=name)
 
         self.indicator_label = Label(self, bg="#35654d")
-        self.indicator_label.place(x=90, y=190)
+        self.indicator_label.place(x=106, y=190)
         self.played_img, self.suspected_img, self.turn_img = self.get_images()
 
         self.played = False
