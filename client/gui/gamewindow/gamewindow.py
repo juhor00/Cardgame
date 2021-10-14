@@ -5,6 +5,7 @@ try:
     from .cardpile import *
     from .opponents import Opponents
     from .claim import ClaimText
+    from .turn import Turn
 except ImportError:
     from hand import Hand
     from claimgrid import ClaimGrid
@@ -12,6 +13,7 @@ except ImportError:
     from cardpile import *
     from opponents import Opponents
     from claim import ClaimText
+    from turn import Turn
 
 
 class GameWindow(Frame):
@@ -35,6 +37,7 @@ class GameWindow(Frame):
         self.claimgrid = ClaimGrid(self)
         self.opponents = Opponents(self)
         self.claim = Claim(self)
+        self.turn = Turn(self)
 
         self.place_widgets()
         self.lower_play_cards()

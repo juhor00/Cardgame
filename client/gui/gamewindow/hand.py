@@ -32,7 +32,7 @@ class Hand(Frame):
         """
         Add images to arrow buttons
         """
-        image = Image.open(f"gui/mainwindow/assets/arrow.png")
+        image = Image.open(f"gui/gamewindow/assets/arrow.png")
 
         right = image.resize((40, 40), Image.ANTIALIAS)
         left = ImageOps.mirror(right)

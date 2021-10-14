@@ -105,9 +105,9 @@ class Opponent(CardPile):
         Add images as indicator label's attributes
         :return 3 Images
         """
-        played = Image.open("gui/mainwindow/assets/spades.png")
-        suspected = Image.open("gui/mainwindow/assets/questionmark.png")
-        turn = Image.open("gui/mainwindow/assets/turn_arrow.png")
+        played = Image.open("gui/gamewindow/assets/spades.png")
+        suspected = Image.open("gui/gamewindow/assets/questionmark.png")
+        turn = Image.open("gui/gamewindow/assets/turn_arrow.png")
 
         return ImageTk.PhotoImage(played), ImageTk.PhotoImage(suspected), ImageTk.PhotoImage(turn)
 

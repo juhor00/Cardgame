@@ -7,7 +7,7 @@ def calculate_size():
     Calculates the size of the images
     :return: int tuple, (w, h)
     """
-    image = Image.open("gui/mainwindow/assets/cards/red_back.png")
+    image = Image.open("gui/gamewindow/assets/cards/red_back.png")
 
     size = (160, 160)
     ratio = calculate_ratio(size, image.size)
@@ -51,7 +51,7 @@ class OpenedCard(Button):
         """
         Adds an image to the card
         """
-        image = Image.open(f"gui/mainwindow/assets/cards/{self.rank_str_}{self.suit_}.png")
+        image = Image.open(f"gui/gamewindow/assets/cards/{self.rank_str_}{self.suit_}.png")
 
         # Resize
         image = image.resize(calculate_size(), Image.ANTIALIAS)
@@ -132,7 +132,7 @@ class ClosedCard(Label):
         try:
             image = Image.open("./assets/cards/red_back.png")
         except FileNotFoundError:
-            image = Image.open(f"gui/mainwindow/assets/cards/red_back.png")
+            image = Image.open(f"gui/gamewindow/assets/cards/red_back.png")
 
         # Resize
         image = image.resize(calculate_size(), Image.ANTIALIAS)

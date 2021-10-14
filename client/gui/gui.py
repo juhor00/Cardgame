@@ -1,10 +1,10 @@
 from tkinter import *
 
 try:
-    from .mainwindow.gamewindow import GameWindow
+    from .gamewindow.gamewindow import GameWindow
     from .lobby.lobby import Lobby
 except ImportError:
-    from mainwindow.gamewindow import GameWindow
+    from gamewindow.gamewindow import GameWindow
     from lobby.lobby import Lobby
 
 
