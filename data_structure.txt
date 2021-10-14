@@ -80,7 +80,6 @@ CLIENT TO SERVER
 "game":
     {
     "deck"      (bool) <state>
-    "gamepile"  (bool) <state>
     "played"    [ (str) <card> ...]
     "claimed"   (int) rank
     "suspect"   (bool) <state>

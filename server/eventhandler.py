@@ -152,6 +152,13 @@ class EventHandler:
                 self.game.suspect(player)
                 new_thread(lambda: self.wait_for_display(wait=DISPLAY_DURATION))
 
+        if "deck" in data:
+            player = self.get_player(client)
+            if self.game.turnmanager.is_in_turn(player):
+                card = self.game.deck_play(player)
+                data = {"game": {"display": [card]}}
+                self.send(client, data)
+
     def broadcast_lobby(self):
         """
         Send lobby data to all players

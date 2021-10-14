@@ -133,12 +133,18 @@ class Game:
         """
         return player != self.last_played_player
 
-    def deck_play(self, player):
+    def deck_play(self, player: Player):
         """
-
-        :param player:
-        :return:
+        Draw card from the deck
+        :param player: Player
+        :return: Card
         """
+        if self.turnmanager.is_in_turn(player):
+            card = self.deck.get_top()
+            player.add(card)
+            return card
+        else:
+            return None
 
     def discard(self):
         """
