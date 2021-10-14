@@ -57,7 +57,7 @@ class Gui(Tk):
             "play_cards_remove": lambda cards: self.remove_play_cards(cards),
             "allowed_claims": lambda buttons: self.gamewindow.claimgrid.enable_buttons(buttons),
             "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
-            "turn": lambda turn: None,
+            "turn": lambda turn: self.gamewindow.turn.show() if turn else self.gamewindow.turn.hide(),
             "duration": lambda duration: self.gamewindow.claim.start_flicker(duration),
         }
 

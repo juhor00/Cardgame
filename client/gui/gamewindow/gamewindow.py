@@ -53,6 +53,7 @@ class GameWindow(Frame):
         self.claim.place(x=756, y=220)
         self.opponents.place(x=0, y=4)
         self.play_cards.place(x=348, y=230)
+        self.turn.place(x=80, y=540)
 
     def lift_play_cards(self):
         """

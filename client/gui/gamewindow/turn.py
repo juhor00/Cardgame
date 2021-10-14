@@ -5,12 +5,12 @@ from PIL import Image, ImageTk
 class Turn(Label):
 
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, bd=0)
         self.parent = parent
 
         image = Image.open("gui/gamewindow/assets/your_turn.png")
+        image = image.resize((232, 113), Image.ANTIALIAS)
         self.image = ImageTk.PhotoImage(image)
-        self.config(image=image)
 
     def hide(self):
         self.config(image="")
