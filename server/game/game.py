@@ -19,6 +19,7 @@ class Game:
         self.gamedeck = GameDeck()
         self.turnmanager = TurnManager(players)
         self.last_played_player = None
+        self.played_from_deck = False
 
     def start(self):
         """
@@ -96,6 +97,8 @@ class Game:
         self.last_played_player = player
         self.turnmanager.change_turn()
 
+        self.played_from_deck = False
+
     def suspect(self, player):
         """
         Suspecting action
@@ -133,6 +136,18 @@ class Game:
         """
         return player != self.last_played_player
 
+    def can_draw_deck(self, player: Player):
+        """
+        Return True if player is allowed to draw from the deck
+        :param player: Player
+        :return: bool
+        """
+        if not self.turnmanager.is_in_turn(player):
+            return False
+        if self.is_played_from_deck():
+            return False
+        return True
+
     def deck_play(self, player: Player):
         """
         Draw card from the deck
@@ -140,6 +155,7 @@ class Game:
         :return: Card
         """
         if self.turnmanager.is_in_turn(player):
+            self.played_from_deck = True
             card = self.deck.get_top()
             player.add(card)
             return card
@@ -287,3 +303,6 @@ class Game:
                 denied[rank] = reason
 
         return allowed, denied
+
+    def is_played_from_deck(self):
+        return self.played_from_deck
