@@ -122,6 +122,9 @@ class Gui(Tk):
         Action when hand cards clicked
         :param event: tkinter event
         """
+        if self.status.is_displaying():
+            return
+
         if self.status.is_in_turn():
             if len(self.gamewindow.play_cards.get_cards()) >= 4:
                 return
@@ -149,6 +152,9 @@ class Gui(Tk):
         Action when play cards clicked
         :param event: tkinter event
         """
+        if self.status.is_displaying():
+            return
+
         if self.status.is_in_turn():
             card = event.data["content"]
             self.gamewindow.play_cards.remove_cards([card])

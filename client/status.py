@@ -223,6 +223,9 @@ class Status:
     def get_display(self):
         return self.display
 
+    def is_displaying(self):
+        return len(self.get_display()) > 0
+
     def set_hand_cards(self, cards):
         """
         Set hand cards. If card is already in play cards, and player is in turn, don't change
