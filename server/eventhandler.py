@@ -154,9 +154,9 @@ class EventHandler:
 
         if "deck" in data:
             player = self.get_player(client)
-            if self.game.turnmanager.is_in_turn(player):
+            if self.game.can_draw_deck(player):
                 card = self.game.deck_play(player)
-                data = {"game": {"display": [card]}}
+                data = {"game": {"display": [str(card)]}}
                 self.send(client, data)
 
     def broadcast_lobby(self):
