@@ -109,7 +109,12 @@ class Client:
         :param event: contains eventhandler data
         """
         rank = int(event.data["content"])
-        cards = self.gui.status.get_play_cards()
+
+        # Play card drawn from the deck
+        if self.status.is_displaying():
+            cards = self.gui.status.get_display()
+        else:
+            cards = self.gui.status.get_play_cards()
 
         self.update_status()
         self.status.set_play_cards([])
@@ -135,8 +140,9 @@ class Client:
         Action when deck is clicked
         :param _: eventhandler
         """
-        print("Send: deck")
-        self.send({"game": {"deck": True}})
+        if self.status.is_in_turn():
+            print("Send: deck")
+            self.send({"game": {"deck": True}})
 
     def update_gui(self):
         self.gui.update_status(deepcopy(self.status))
