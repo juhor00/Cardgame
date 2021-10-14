@@ -135,7 +135,8 @@ class Client:
         Action when deck is clicked
         :param _: eventhandler
         """
-        print("Deck")
+        print("Send: deck")
+        self.send({"game": {"deck": True}})
 
     def update_gui(self):
         self.gui.update_status(deepcopy(self.status))
