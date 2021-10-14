@@ -146,6 +146,8 @@ class Game:
             return False
         if self.is_played_from_deck():
             return False
+        if self.turnmanager.is_first_round():
+            return False
         return True
 
     def deck_play(self, player: Player):
@@ -154,7 +156,7 @@ class Game:
         :param player: Player
         :return: Card
         """
-        if self.turnmanager.is_in_turn(player):
+        if self.can_draw_deck(player):
             self.played_from_deck = True
             card = self.deck.get_top()
             player.add(card)
