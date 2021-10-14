@@ -23,6 +23,8 @@ class EventHandler:
         self.game = None
         self.displaying = False
 
+        self.discard_id = 0
+
         self.clients = []
 
     def add(self, socket, uid):
@@ -134,7 +136,8 @@ class EventHandler:
                 self.broadcast_game()
                 self.broadcast_pause()
                 self.broadcast_discard(DISCARD_DURATION)
-                new_thread(lambda: self.wait_for_discard(wait=DISCARD_DURATION))
+                self.discard_id += 1
+                new_thread(lambda: self.wait_for_discard(id_=self.discard_id, wait=DISCARD_DURATION))
             else:
                 self.broadcast_game()
 
@@ -142,6 +145,7 @@ class EventHandler:
             player = self.get_player(client)
             if self.game.can_suspect(player):
                 self.displaying = True
+                self.discard_id += 1
                 self.broadcast_pause()
                 self.broadcast_played_cards()
                 self.broadcast_suspect(player)
@@ -196,6 +200,9 @@ class EventHandler:
 
         # Allowed claims
         self.broadcast_allowed_claims()
+
+        # Print game to server terminal
+        self.game.print()
 
     def broadcast_opponent_data(self):
         """
@@ -345,17 +352,19 @@ class EventHandler:
         """
         return self.game.turnmanager.get_player(client.get_uid())
 
-    def wait_for_discard(self, wait):
+    def wait_for_discard(self, id_, wait):
         """
         Start discard waiting (ONLY CALL IN A THREAD)
         Calls discard method after waiting
+        :param id_: int
         :param wait: int, waiting time in seconds
         """
         print(f"Waiting {wait} seconds to discard")
         sleep(wait)
-        if not self.is_displaying():
-            self.game.discard()
-            self.broadcast_game()
+        if id_ == self.discard_id:
+            if not self.is_displaying():
+                self.game.discard()
+                self.broadcast_game()
 
     def wait_for_display(self, wait):
         """
