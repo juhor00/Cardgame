@@ -75,7 +75,7 @@ class Status:
 
             # Lists
             if type(self_val) is list:
-                # Claims
+                # Claim buttons
                 if self_attr in ["allowed_claims", "denied_claims"]:
                     res_val = compare(self_val, other_val)
                     change.add_attribute(self_attr, res_val)
