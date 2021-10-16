@@ -214,8 +214,8 @@ class Status:
     def get_gamedeck_amount(self):
         return self.gamedeck_amount
 
-    def set_claim(self, amount, rank):
-        self.claim = (amount, rank)
+    def set_claim(self, amount, rank, claim_id):
+        self.claim = (amount, rank, claim_id)
 
     def set_display(self, cards):
         self.display = cards

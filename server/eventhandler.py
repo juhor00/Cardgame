@@ -130,8 +130,9 @@ class EventHandler:
             cards = data["played"]
             claimed = data["claimed"]
             player = self.get_player(client)
+            if not self.game.play(player, cards, claimed):
+                return
             self.claim_id += 1
-            self.game.play(player, cards, claimed)
 
             # Game deck discard check
             if self.game.gamedeck.to_discard():

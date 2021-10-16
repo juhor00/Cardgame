@@ -98,6 +98,7 @@ class Game:
         self.turnmanager.change_turn()
 
         self.played_from_deck = False
+        return True
 
     def suspect(self, player):
         """
