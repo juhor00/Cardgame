@@ -8,7 +8,6 @@ class EventHandler:
         :param client: Client
         """
         self.client = client
-        print("UID:", self.client.status.get_uid())
 
         self.event_types = {
             "lobby": lambda msg: self.lobby_event(msg),

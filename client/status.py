@@ -31,12 +31,12 @@ def list_difference(a, b):
 
 class Status:
 
-    def __init__(self, uid):
+    def __init__(self):
         """
         Create new status
         """
-        self.uid = uid
 
+        self.uid = None
         self.in_lobby = None
         self.opponents = []
         self.deck_amount = None
@@ -141,6 +141,9 @@ class Status:
 
     def is_in_lobby(self):
         return self.in_lobby
+
+    def set_uid(self, uid):
+        self.uid = uid
     
     def get_uid(self):
         return self.uid

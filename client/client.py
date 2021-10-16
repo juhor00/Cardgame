@@ -38,16 +38,30 @@ class Client:
 
     def __init__(self):
 
-        self.network = Network()
-        self.send({"general": "connect"})
+        self.status = Status()
+        self.network = None
+        self.eventhandler = None
 
-        self.status = Status(self.network.get_uid())
-        self.eventhandler = EventHandler(self)
+        # Gui
         self.gui = Gui(deepcopy(self.status))
-
-        new_thread(self.receive)
         self.set_binds()
+        self.gui.after(0, new_thread(self.on_startup))
         self.gui.mainloop()
+
+    def on_startup(self):
+        """
+        Start after GUI
+        """
+        # Network and set up UID
+        self.network = Network()
+        uid = self.network.get_uid()
+        self.status.set_uid(uid)
+        self.gui.status.set_uid(uid)
+
+        # Start communication
+        self.eventhandler = EventHandler(self)
+        self.send({"general": "connect"})
+        new_thread(self.receive)
 
     def __del__(self):
         """

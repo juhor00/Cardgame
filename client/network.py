@@ -7,13 +7,13 @@ class Network:
         server = "176.72.177.14"
         port = 12345
         self.addr = (server, port)
-        self.id = int(self.connect())
-        self.connected = False if self.id == -1 else True
+        self.uid = int(self.connect())
+        self.connected = False if self.uid == -1 else True
 
         self.pending = []
 
     def get_uid(self):
-        return self.id
+        return self.uid
 
     def is_connected(self):
         return self.connected
