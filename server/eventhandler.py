@@ -24,6 +24,7 @@ class EventHandler:
         self.displaying = False
 
         self.discard_id = 0
+        self.claim_id = 0
 
         self.clients = []
 
@@ -129,6 +130,7 @@ class EventHandler:
             cards = data["played"]
             claimed = data["claimed"]
             player = self.get_player(client)
+            self.claim_id += 1
             self.game.play(player, cards, claimed)
 
             # Game deck discard check
@@ -199,7 +201,9 @@ class EventHandler:
         # Claim data
         claim_rank = self.game.gamedeck.get_last_rank()
         claim_amount = self.game.gamedeck.get_last_amount()
-        claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank}, "duration": None, "display": []}}
+        claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank, "id": self.claim_id},
+                               "duration": None,
+                               "display": []}}
         self.sendall(claim_data)
 
         # Player data
