@@ -48,7 +48,7 @@ class Gui(Tk):
             "opponents_remove": lambda opponents: self.remove_opponents(opponents),
             "deck_amount": lambda value: self.gamewindow.deck.set_amount(value),
             "gamedeck_amount": lambda value: self.gamewindow.gamedeck.set_amount(value),
-            "claim": lambda claim: self.gamewindow.claim.new(claim[0], claim[1]),
+            "claim": lambda claim: self.claim(claim),
             "display_add": lambda cards: self.add_display(cards),
             "display_remove": lambda cards: self.remove_display(cards),
             "hand_cards_add": lambda cards: self.gamewindow.hand.add_cards(cards),
@@ -232,3 +232,6 @@ class Gui(Tk):
     def remove_play_cards(self, cards):
         self.gamewindow.play_cards.remove_cards(cards)
         self.gamewindow.claim.stop_flicker()
+
+    def claim(self, claim):
+        self.gamewindow.claim.new(claim[0], claim[1])

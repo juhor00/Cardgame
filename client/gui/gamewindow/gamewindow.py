@@ -6,6 +6,7 @@ try:
     from .opponents import Opponents
     from .claim import ClaimText
     from .turn import Turn
+    from .eventlist import EventList
 except ImportError:
     from hand import Hand
     from claimgrid import ClaimGrid
@@ -14,6 +15,7 @@ except ImportError:
     from opponents import Opponents
     from claim import ClaimText
     from turn import Turn
+    from eventlist import EventList
 
 
 class GameWindow(Frame):
@@ -38,6 +40,7 @@ class GameWindow(Frame):
         self.opponents = Opponents(self)
         self.claim = Claim(self)
         self.turn = Turn(self)
+        self.eventlist = EventList(self)
 
         self.place_widgets()
         self.lower_play_cards()
@@ -54,6 +57,7 @@ class GameWindow(Frame):
         self.opponents.place(x=0, y=4)
         self.play_cards.place(x=348, y=230)
         self.turn.place(x=80, y=540)
+        self.eventlist.place(x=900, y=220)
 
     def lift_play_cards(self):
         """
