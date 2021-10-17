@@ -59,15 +59,15 @@ class EventList(Frame):
         self.new(f"{name} suspected and {'won' if won else 'lost'} the suspect")
 
     def new(self, text):
-        event = Label(self, text=text, font=("Helvetica", 14), wraplength=230, justify="center")
-        event.pack(side=TOP)
+        event = Label(self, text=text, font=("Helvetica", 16), wraplength=250, justify="left")
+        event.pack(side=BOTTOM, anchor="w")
         self.events.append(event)
 
         if len(self.events) > MAX_EVENTS:
             self.remove()
 
     def remove(self):
-        event = self.events.pop(-1)
+        event = self.events.pop(0)
         event.destroy()
 
 

@@ -234,11 +234,13 @@ class Gui(Tk):
         self.gamewindow.claim.stop_flicker()
 
     def claim(self, claim):
-        self.gamewindow.claim.new(claim[0], claim[1])
+        amount, rank, claim_id, name, deck = claim
+        self.gamewindow.claim.new(amount, rank)
         name = claim[3]
         deck = claim[4]
 
-        if not deck:
-            self.gamewindow.eventlist.played_cards(name)
-        else:
-            self.gamewindow.eventlist.played_deck(name)
+        if amount:
+            if not deck:
+                self.gamewindow.eventlist.played_cards(name)
+            else:
+                self.gamewindow.eventlist.played_deck(name)
