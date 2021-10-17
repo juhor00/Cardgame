@@ -109,15 +109,15 @@ class Game:
         """
         Suspecting action
         :param player: Player, who suspects
-        :return: bool
+        :return: True if player who suspected won, None if didn't perform suspect
         """
         if self.gamedeck.is_empty():
-            return False
+            return None
 
         claimer = self.last_played_player
 
         if claimer == player:
-            return False
+            return None
 
         if self.gamedeck.lied():
             # Player who claimed the cards draw all
@@ -126,13 +126,14 @@ class Game:
             self.draw_all(self.gamedeck, claimer)
             self.turnmanager.turn_to(player.get_name())
             print(f"Lied! {claimer} draws all cards and turn jumps to {player}")
+            return True
         else:
             # Player who suspected draw all
             # Player who claimed keeps the turn
             self.draw_all(self.gamedeck, player)
             print(f"Didn't lie! {player} draws all cards and turn stays")
             self.turnmanager.turn_to(claimer.get_name())
-        return True
+            return False
 
     def can_suspect(self, player):
         """

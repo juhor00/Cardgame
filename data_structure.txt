@@ -54,8 +54,8 @@ FROM SERVER
 	"amount": 	(int) <amount>  # GameDeck amount
 	"suspect":
 		{
-		"cards":	[ (str) <card> ...]
-		"lied":		(bool) <state>
+		"name":     (str) <name>
+		"won":		(bool) <state>
 		}
 	"display":  [   (str) <card> ...]   # Play cards that can't be removed
 	"duration": (int) <time>    # How long display is on

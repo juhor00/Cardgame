@@ -152,7 +152,9 @@ class EventHandler:
                 self.broadcast_pause()
                 self.broadcast_played_cards()
                 self.broadcast_suspect(player)
-                self.game.suspect(player)
+                won = self.game.suspect(player)
+                if won is not None:
+                    self.sendall({"game": {"suspect": {"name": player.get_name(), "won": won}}})
                 new_thread(lambda: self.wait_for_display(wait=DISPLAY_DURATION))
 
         if "deck" in data:
@@ -217,7 +219,8 @@ class EventHandler:
                                           "deck": self.game.last_round_played_deck()},
                                "duration": None,
                                "display": [],
-                               "discarded": False}}
+                               "discarded": False,
+                               "suspect": {"name": None, "won": None}}}
         self.sendall(claim_data)
 
         # Player data

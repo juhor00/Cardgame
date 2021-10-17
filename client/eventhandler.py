@@ -95,6 +95,7 @@ class EventHandler:
             "duration": lambda duration: self.client.status.set_duration(duration),
             "turn": lambda turn: self.client.status.set_turn(turn),
             "discarded": lambda discarded: self.client.status.set_discarded(discarded),
+            "suspect": lambda suspect: self.client.status.set_suspect_event(suspect["name"], suspect["won"])
         }
 
         for key in data:

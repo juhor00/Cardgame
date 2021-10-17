@@ -60,6 +60,7 @@ class Gui(Tk):
             "turn": lambda turn: self.gamewindow.turn.show() if turn else self.gamewindow.turn.hide(),
             "duration": lambda duration: self.gamewindow.claim.start_flicker(duration),
             "discarded": lambda discarded: self.gamewindow.eventlist.discard() if discarded else None,
+            "suspect_event": lambda s: self.gamewindow.eventlist.suspected(s[0], s[1]) if s[0] is not None else None
         }
 
     def update_status(self, status):

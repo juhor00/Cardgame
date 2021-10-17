@@ -50,6 +50,7 @@ class Status:
         self.turn = None
         self.duration = None
         self.discarded = None
+        self.suspect_event = None
 
     def __str__(self):
         return str(vars(self))
@@ -280,6 +281,9 @@ class Status:
 
     def set_discarded(self, discarded):
         self.discarded = discarded
+
+    def set_suspect_event(self, name, won):
+        self.suspect_event = name, won
 
 
 class Changes:
