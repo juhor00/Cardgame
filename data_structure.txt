@@ -59,6 +59,7 @@ FROM SERVER
 		}
 	"display":  [   (str) <card> ...]   # Play cards that can't be removed
 	"duration": (int) <time>    # How long display is on
+	"discarded": (bool) <state>
 	},
 "claimgrid":
 	{

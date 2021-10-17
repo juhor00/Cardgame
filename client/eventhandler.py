@@ -84,6 +84,7 @@ class EventHandler:
         - Display (suspect cards shown)
         - Duration (how long until deck is discarded)
         - Turn
+        - Discarded
         :param data: dict
         """
         actions = {
@@ -93,6 +94,7 @@ class EventHandler:
             "display": lambda cards: self.client.status.set_display(cards),
             "duration": lambda duration: self.client.status.set_duration(duration),
             "turn": lambda turn: self.client.status.set_turn(turn),
+            "discarded": lambda discarded: self.client.status.set_discarded(discarded),
         }
 
         for key in data:

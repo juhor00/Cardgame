@@ -47,7 +47,7 @@ class Gui(Tk):
             "opponents_add": lambda opponents: self.add_opponents(opponents),
             "opponents_remove": lambda opponents: self.remove_opponents(opponents),
             "deck_amount": lambda value: self.gamewindow.deck.set_amount(value),
-            "gamedeck_amount": lambda value: self.gamewindow.gamedeck.set_amount(value),
+            "gamedeck_amount": lambda amount: self.gamewindow.gamedeck.set_amount(amount),
             "claim": lambda claim: self.claim(claim),
             "display_add": lambda cards: self.add_display(cards),
             "display_remove": lambda cards: self.remove_display(cards),
@@ -59,6 +59,7 @@ class Gui(Tk):
             "denied_claims": lambda buttons: self.gamewindow.claimgrid.disable_buttons(buttons),
             "turn": lambda turn: self.gamewindow.turn.show() if turn else self.gamewindow.turn.hide(),
             "duration": lambda duration: self.gamewindow.claim.start_flicker(duration),
+            "discarded": lambda discarded: self.gamewindow.eventlist.discard() if discarded else None,
         }
 
     def update_status(self, status):
@@ -234,6 +235,11 @@ class Gui(Tk):
         self.gamewindow.claim.stop_flicker()
 
     def claim(self, claim):
+        """
+        Set new claim.
+        Add play event (normal or deck)
+        :param claim: claim changes: int, int, int, str, bool
+        """
         amount, rank, claim_id, name, deck = claim
         self.gamewindow.claim.new(amount, rank)
         name = claim[3]

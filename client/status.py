@@ -49,6 +49,7 @@ class Status:
         self.denied_claims = []
         self.turn = None
         self.duration = None
+        self.discarded = None
 
     def __str__(self):
         return str(vars(self))
@@ -276,6 +277,9 @@ class Status:
 
     def set_duration(self, duration):
         self.duration = duration
+
+    def set_discarded(self, discarded):
+        self.discarded = discarded
 
 
 class Changes:

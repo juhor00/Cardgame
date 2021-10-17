@@ -216,7 +216,8 @@ class EventHandler:
                                           "name": name,
                                           "deck": self.game.last_round_played_deck()},
                                "duration": None,
-                               "display": []}}
+                               "display": [],
+                               "discarded": False}}
         self.sendall(claim_data)
 
         # Player data
@@ -389,6 +390,7 @@ class EventHandler:
             if not self.is_displaying():
                 self.game.discard()
                 self.broadcast_game()
+                self.sendall({"game": {"discarded": True}})
 
     def wait_for_display(self, wait):
         """
