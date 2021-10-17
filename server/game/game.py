@@ -20,6 +20,7 @@ class Game:
         self.turnmanager = TurnManager(players)
         self.last_played_player = None
         self.played_from_deck = False
+        self.last_round_played_from_deck = False
 
     def start(self):
         """
@@ -97,6 +98,10 @@ class Game:
         self.last_played_player = player
         self.turnmanager.change_turn()
 
+        if self.played_from_deck:
+            self.last_round_played_from_deck = True
+        else:
+            self.last_round_played_from_deck = False
         self.played_from_deck = False
         return True
 
@@ -312,3 +317,6 @@ class Game:
 
     def get_last_played_player(self):
         return self.last_played_player
+
+    def last_round_played_deck(self):
+        return self.last_round_played_from_deck

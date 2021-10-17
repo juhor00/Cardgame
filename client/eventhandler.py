@@ -88,7 +88,8 @@ class EventHandler:
         """
         actions = {
             "amount": lambda amount: self.client.status.set_gamedeck_amount(amount),
-            "latest": lambda claim: self.client.status.set_claim(claim["amount"], claim["rank"], claim["id"]),
+            "latest": lambda claim: self.client.status.set_claim(claim["amount"], claim["rank"],
+                                                                 claim["id"], claim["name"], claim["deck"]),
             "display": lambda cards: self.client.status.set_display(cards),
             "duration": lambda duration: self.client.status.set_duration(duration),
             "turn": lambda turn: self.client.status.set_turn(turn),

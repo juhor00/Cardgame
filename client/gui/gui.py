@@ -235,3 +235,10 @@ class Gui(Tk):
 
     def claim(self, claim):
         self.gamewindow.claim.new(claim[0], claim[1])
+        name = claim[3]
+        deck = claim[4]
+
+        if not deck:
+            self.gamewindow.eventlist.played_cards(name)
+        else:
+            self.gamewindow.eventlist.played_deck(name)
