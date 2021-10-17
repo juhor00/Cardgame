@@ -309,3 +309,6 @@ class Game:
 
     def is_played_from_deck(self):
         return self.played_from_deck
+
+    def get_last_played_player(self):
+        return self.last_played_player

@@ -48,6 +48,7 @@ FROM SERVER
 		"amount": 	(int) <amount>
 		"rank": 	(int) <rank>
 		"id":       (int) <id>
+		"name":     (str) <name>
 		}
 	"amount": 	(int) <amount>  # GameDeck amount
 	"suspect":

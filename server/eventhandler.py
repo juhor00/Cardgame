@@ -202,7 +202,8 @@ class EventHandler:
         # Claim data
         claim_rank = self.game.gamedeck.get_last_rank()
         claim_amount = self.game.gamedeck.get_last_amount()
-        claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank, "id": self.claim_id},
+        claim_data = {"game": {"latest": {"amount": claim_amount, "rank": claim_rank,
+                                          "id": self.claim_id, "name": str(self.game.get_last_played_player())},
                                "duration": None,
                                "display": []}}
         self.sendall(claim_data)
