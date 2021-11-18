@@ -115,9 +115,12 @@ class TurnManager:
         """
         Removes the active player
         """
-        self.turnlist.remove(self.active_player)
-        player_id = self.active_player.get_uid()
-        del(self.players[player_id])
+        self.remove(self.active_player)
+
+    def remove(self, player):
+        self.turnlist.remove(player)
+        uid = player.get_uid()
+        del(self.players[uid])
         self.allowed_to_change = True
 
     def turn_to(self, name):

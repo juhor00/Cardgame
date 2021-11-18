@@ -22,6 +22,9 @@ class Game:
         self.played_from_deck = False
         self.last_round_played_from_deck = False
 
+        self.winners = {}
+        self.win_count = 0
+
     def start(self):
         """
         Start the game
@@ -86,9 +89,7 @@ class Game:
                 return False
 
         # Player who played last won
-        if self.last_played_player is not None:
-            if self.last_played_player.hand.is_empty():
-                print(self.last_played_player, "won!")
+        self.check_win()
 
         # Play cards
         self.gamedeck.add_multiple(cards)
@@ -133,6 +134,7 @@ class Game:
             self.draw_all(self.gamedeck, player)
             print(f"Didn't lie! {player} draws all cards and turn stays")
             self.turnmanager.turn_to(claimer.get_name())
+            self.check_win()
             return False
 
     def can_suspect(self, player):
@@ -180,14 +182,18 @@ class Game:
             self.gamedeck.empty()
             self.turnmanager.turn_to(self.last_played_player.get_name())
             print("Discarded")
+            self.check_win()
 
-    def handle_win(self):
+    def check_win(self):
         """
-        Check if active player has won and remove them from the game
+        Check if last player has won and remove them from the game
         """
         if self.deck.is_empty():
-            if self.turnmanager.get_active_player().hand.is_empty():
-                print(f"{self.turnmanager.get_active_player()} has won!")
+            if self.last_played_player.hand.is_empty():
+                print(f"{self.last_played_player} has won!")
+                self.turnmanager.remove(self.last_played_player)
+                self.win_count += 1
+                self.winners[self.last_played_player] = self.win_count
                 self.turnmanager.force_next_turn()
 
     def draw_all(self, source: Deck, player: Player):
